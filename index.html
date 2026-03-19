@@ -456,102 +456,79 @@ function showSeg(seg,el){
   S.active=seg;
 }
 
-// ===== SABİT FİYATLAR (Yedek) — Mart 2025 Türkiye Piyasası =====
-const STATIC_PRICES = {
-  ddr3:{
-    budget:{cpu:850,motherboard:600,ram:700,gpu:3200,ssd:600,psu:750,case:650},
-    mid:{cpu:1400,motherboard:800,ram:700,gpu:4500,ssd:900,psu:850,case:800},
-    high:{cpu:2200,motherboard:1500,ram:900,gpu:7500,ssd:1400,psu:1200,case:1100}
-  },
-  ddr4:{
-    budget:{cpu:2200,motherboard:1800,ram:1100,gpu:4200,ssd:750,psu:850,case:700},
-    mid:{cpu:3200,motherboard:2400,ram:1400,gpu:7800,ssd:1500,psu:1400,case:1200},
-    high:{cpu:5800,motherboard:4200,ram:2600,gpu:16000,ssd:2400,psu:2000,case:1800}
-  },
-  ddr5:{
-    budget:{cpu:4500,motherboard:3200,ram:2200,gpu:8500,ssd:1200,psu:1200,case:900},
-    mid:{cpu:7500,motherboard:4800,ram:3000,gpu:12000,ssd:2200,psu:1800,case:1600},
-    high:{cpu:12000,motherboard:8500,ram:5500,gpu:22000,ssd:3800,psu:2800,case:2500}
-  }
-};
-
-// ===== FİYAT ÇEKME: Cimri → Sabit Yedek =====
+// ===== prices.json OKUYUCU =====
 async function fetchPrices(){
+  try {
+    // prices.json'u GitHub'dan çek
+    const r = await fetch('prices.json?t='+Date.now());
+    if(!r.ok) throw new Error('prices.json bulunamadı');
+    const data = await r.json();
+
+    const segs=['budget','mid','high'];
+    segs.forEach(seg=>{
+      Object.keys(DB[S.ddr][seg].parts).forEach(k=>{
+        const partData = data.prices?.[S.ddr]?.[seg]?.[k];
+        if(partData){
+          const price = partData.price;
+          const source = partData.source;
+          const el = document.getElementById(`pp_${seg}_${k}`);
+          if(el){
+            el.textContent = '₺'+price.toLocaleString('tr-TR');
+            el.className = source==='fallback' ? 'part-price static' : 'part-price loaded';
+            el.title = source==='fallback' ? 'Tahmini fiyat' : 'Akakce\'den alınan güncel fiyat';
+          }
+          S.prices[`${seg}_${k}`] = price;
+        }
+      });
+      updateTot(seg);
+    });
+
+    // Güncelleme zamanını göster
+    const updatedAt = data.updated_at || '—';
+    document.getElementById('priceDot').style.animation='none';
+    document.getElementById('priceDot').style.background='var(--green)';
+    document.getElementById('priceStatusText').textContent=`✅ Fiyatlar güncellendi — Son: ${updatedAt}`;
+
+  } catch(e) {
+    // prices.json yoksa sabit fiyatları göster
+    console.log('prices.json okunamadı, sabit fiyatlar gösteriliyor');
+    loadFallbackPrices();
+  }
+}
+
+function loadFallbackPrices(){
+  const FALLBACK = {
+    ddr3:{
+      budget:{cpu:850,motherboard:600,ram:700,gpu:3200,ssd:600,psu:750,case:650},
+      mid:{cpu:1400,motherboard:800,ram:700,gpu:4500,ssd:900,psu:850,case:800},
+      high:{cpu:2200,motherboard:1500,ram:900,gpu:7500,ssd:1400,psu:1200,case:1100}
+    },
+    ddr4:{
+      budget:{cpu:2200,motherboard:1800,ram:1100,gpu:4200,ssd:750,psu:850,case:700},
+      mid:{cpu:3200,motherboard:2400,ram:1400,gpu:7800,ssd:1500,psu:1400,case:1200},
+      high:{cpu:5800,motherboard:4200,ram:2600,gpu:16000,ssd:2400,psu:2000,case:1800}
+    },
+    ddr5:{
+      budget:{cpu:4500,motherboard:3200,ram:2200,gpu:8500,ssd:1200,psu:1200,case:900},
+      mid:{cpu:7500,motherboard:4800,ram:3000,gpu:12000,ssd:2200,psu:1800,case:1600},
+      high:{cpu:12000,motherboard:8500,ram:5500,gpu:22000,ssd:3800,psu:2800,case:2500}
+    }
+  };
   const segs=['budget','mid','high'];
-  const parts=[];
-  segs.forEach(seg=>Object.entries(DB[S.ddr][seg].parts).forEach(([k,p])=>parts.push({seg,k,q:p.q})));
-
-  let done=0;
-  document.getElementById('priceStatusText').textContent=`Cimri'den fiyatlar çekiliyor (0/${parts.length})...`;
-
-  // Önce sabit fiyatları hemen göster
   segs.forEach(seg=>{
     Object.keys(DB[S.ddr][seg].parts).forEach(k=>{
-      const staticPrice=STATIC_PRICES[S.ddr][seg][k];
-      if(staticPrice){
+      const price=FALLBACK[S.ddr][seg][k];
+      if(price){
         const el=document.getElementById(`pp_${seg}_${k}`);
-        if(el){
-          el.textContent='~₺'+staticPrice.toLocaleString('tr-TR');
-          el.className='part-price static';
-          el.title='Tahmini fiyat, Cimri\'den güncelleniyor...';
-        }
-        S.prices[`${seg}_${k}`]=staticPrice;
+        if(el){el.textContent='~₺'+price.toLocaleString('tr-TR');el.className='part-price static';}
+        S.prices[`${seg}_${k}`]=price;
       }
     });
     updateTot(seg);
   });
-
-  // Sonra Cimri'den canlı fiyat çekmeye çalış
-  for(const{seg,k,q}of parts){
-    const price=await getPriceCimri(q);
-    const id=`pp_${seg}_${k}`;
-    const el=document.getElementById(id);
-    if(price){
-      if(el){
-        el.textContent='₺'+price.toLocaleString('tr-TR');
-        el.className='part-price loaded';
-        el.title='Cimri\'den alınan güncel fiyat';
-      }
-      S.prices[`${seg}_${k}`]=price;
-      updateTot(seg);
-    }
-    // Cimri başarısız olsa bile sabit fiyat zaten var
-    done++;
-    document.getElementById('priceStatusText').textContent=`Cimri'den güncelleniyor (${done}/${parts.length})...`;
-    await wait(500);
-  }
-
   document.getElementById('priceDot').style.animation='none';
-  document.getElementById('priceDot').style.background='var(--green)';
-  document.getElementById('priceStatusText').textContent='✅ Fiyatlar güncellendi! (~tahmini, 🟢 canlı)';
-}
-
-async function getPriceCimri(q){
-  try{
-    const url=`https://www.cimri.com/arama?q=${encodeURIComponent(q)}`;
-    const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const r=await fetch(proxy,{signal:AbortSignal.timeout(8000)});
-    if(!r.ok)return null;
-    const d=await r.json();
-    const html=d.contents||'';
-    // Cimri fiyat pattern'leri
-    const patterns=[
-      /"price"\s*:\s*"?([0-9]+(?:[.,][0-9]+)?)"?/g,
-      /class="[^"]*price[^"]*"[^>]*>\s*([0-9]{3,6}(?:[.,][0-9]{0,3})?)\s*(?:TL|₺)/gi,
-      /([0-9]{3,6}(?:[.,][0-9]{3})*)\s*(?:TL|₺)/g
-    ];
-    const prices=[];
-    for(const pat of patterns){
-      const ms=[...html.matchAll(pat)];
-      ms.forEach(m=>{
-        const v=parseFloat(m[1].replace(/\./g,'').replace(',','.'));
-        if(!isNaN(v)&&v>150&&v<120000)prices.push(v);
-      });
-      if(prices.length>=2)break;
-    }
-    prices.sort((a,b)=>a-b);
-    return prices.length>0?prices[0]:null;
-  }catch(e){return null;}
+  document.getElementById('priceDot').style.background='var(--yellow)';
+  document.getElementById('priceStatusText').textContent='⚠️ Tahmini fiyatlar gösteriliyor — GitHub Actions henüz çalışmadı';
 }
 
 function updateTot(seg){
@@ -564,8 +541,6 @@ function updateTot(seg){
     document.getElementById('price'+seg).textContent='₺'+tot.toLocaleString('tr-TR');
   }
 }
-
-function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 
 // ===== CART =====
 function addCart(seg){
