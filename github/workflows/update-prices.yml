@@ -2,8 +2,8 @@ name: Fiyat Güncelle
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Her gün 05:00 TR saati
-  workflow_dispatch:       # Manuel çalıştırma butonu
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
 jobs:
   update-prices:
@@ -12,7 +12,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Repoyu İndir
+      - name: Repoyu Indir
         uses: actions/checkout@v4
 
       - name: Python Kur
@@ -20,10 +20,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Kütüphane Yükle
+      - name: Kutuphane Yukle
         run: pip install requests
 
-      - name: Fiyatları Güncelle
+      - name: Fiyatlari Guncelle
         env:
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
         run: python update_prices.py
@@ -31,7 +31,7 @@ jobs:
       - name: prices.json Kaydet
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "PC Ustası Bot"
+          git config --local user.name "PC Ustasi Bot"
           git add prices.json
-          git diff --staged --quiet || git commit -m "💰 Fiyatlar güncellendi - $(date +'%d.%m.%Y %H:%M')"
+          git diff --staged --quiet || git commit -m "Fiyatlar guncellendi"
           git push
