@@ -1,0 +1,37 @@
+name: Fiyat Güncelle
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Repoyu Indir
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Kutuphane Yukle
+        run: pip install requests
+
+      - name: Fiyatlari Guncelle
+        env:
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+        run: python update_prices.py
+
+      - name: prices.json Kaydet
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "PC Ustasi Bot"
+          git add prices.json
+          git diff --staged --quiet || git commit -m "Fiyatlar guncellendi"
+          git push
