@@ -1,99 +1,288 @@
 {
-  "updated_at": "19.03.2026 00:00",
+  "updated_at": "19.03.2026 17:11",
   "prices": {
     "ddr3": {
       "budget": {
-        "cpu":         {"price": 850,  "source": "fallback"},
-        "motherboard": {"price": 600,  "source": "fallback"},
-        "ram":         {"price": 700,  "source": "fallback"},
-        "gpu":         {"price": 3200, "source": "fallback"},
-        "ssd":         {"price": 600,  "source": "fallback"},
-        "psu":         {"price": 750,  "source": "fallback"},
-        "case":        {"price": 650,  "source": "fallback"},
+        "cpu": {
+          "price": 850,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 600,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 700,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 3200,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 600,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 750,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 650,
+          "source": "fallback"
+        },
         "_total": 7350
       },
       "mid": {
-        "cpu":         {"price": 1400, "source": "fallback"},
-        "motherboard": {"price": 800,  "source": "fallback"},
-        "ram":         {"price": 700,  "source": "fallback"},
-        "gpu":         {"price": 4500, "source": "fallback"},
-        "ssd":         {"price": 900,  "source": "fallback"},
-        "psu":         {"price": 850,  "source": "fallback"},
-        "case":        {"price": 800,  "source": "fallback"},
+        "cpu": {
+          "price": 1400,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 800,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 700,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 4500,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 900,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 850,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 800,
+          "source": "fallback"
+        },
         "_total": 9950
       },
       "high": {
-        "cpu":         {"price": 2200, "source": "fallback"},
-        "motherboard": {"price": 1500, "source": "fallback"},
-        "ram":         {"price": 900,  "source": "fallback"},
-        "gpu":         {"price": 7500, "source": "fallback"},
-        "ssd":         {"price": 1400, "source": "fallback"},
-        "psu":         {"price": 1200, "source": "fallback"},
-        "case":        {"price": 1100, "source": "fallback"},
+        "cpu": {
+          "price": 2200,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 1500,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 900,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 7500,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 1400,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 1200,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 1100,
+          "source": "fallback"
+        },
         "_total": 15800
       }
     },
     "ddr4": {
       "budget": {
-        "cpu":         {"price": 2200,  "source": "fallback"},
-        "motherboard": {"price": 1800,  "source": "fallback"},
-        "ram":         {"price": 1100,  "source": "fallback"},
-        "gpu":         {"price": 4200,  "source": "fallback"},
-        "ssd":         {"price": 750,   "source": "fallback"},
-        "psu":         {"price": 850,   "source": "fallback"},
-        "case":        {"price": 700,   "source": "fallback"},
+        "cpu": {
+          "price": 2200,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 1800,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 1100,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 4200,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 750,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 850,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 700,
+          "source": "fallback"
+        },
         "_total": 11600
       },
       "mid": {
-        "cpu":         {"price": 3200,  "source": "fallback"},
-        "motherboard": {"price": 2400,  "source": "fallback"},
-        "ram":         {"price": 1400,  "source": "fallback"},
-        "gpu":         {"price": 7800,  "source": "fallback"},
-        "ssd":         {"price": 1500,  "source": "fallback"},
-        "psu":         {"price": 1400,  "source": "fallback"},
-        "case":        {"price": 1200,  "source": "fallback"},
+        "cpu": {
+          "price": 3200,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 2400,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 1400,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 7800,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 1500,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 1400,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 1200,
+          "source": "fallback"
+        },
         "_total": 18900
       },
       "high": {
-        "cpu":         {"price": 5800,  "source": "fallback"},
-        "motherboard": {"price": 4200,  "source": "fallback"},
-        "ram":         {"price": 2600,  "source": "fallback"},
-        "gpu":         {"price": 16000, "source": "fallback"},
-        "ssd":         {"price": 2400,  "source": "fallback"},
-        "psu":         {"price": 2000,  "source": "fallback"},
-        "case":        {"price": 1800,  "source": "fallback"},
+        "cpu": {
+          "price": 5800,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 4200,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 2600,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 16000,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 2400,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 2000,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 1800,
+          "source": "fallback"
+        },
         "_total": 34800
       }
     },
     "ddr5": {
       "budget": {
-        "cpu":         {"price": 4500,  "source": "fallback"},
-        "motherboard": {"price": 3200,  "source": "fallback"},
-        "ram":         {"price": 2200,  "source": "fallback"},
-        "gpu":         {"price": 8500,  "source": "fallback"},
-        "ssd":         {"price": 1200,  "source": "fallback"},
-        "psu":         {"price": 1200,  "source": "fallback"},
-        "case":        {"price": 900,   "source": "fallback"},
+        "cpu": {
+          "price": 4500,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 3200,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 2200,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 8500,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 1200,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 1200,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 900,
+          "source": "fallback"
+        },
         "_total": 21700
       },
       "mid": {
-        "cpu":         {"price": 7500,  "source": "fallback"},
-        "motherboard": {"price": 4800,  "source": "fallback"},
-        "ram":         {"price": 3000,  "source": "fallback"},
-        "gpu":         {"price": 12000, "source": "fallback"},
-        "ssd":         {"price": 2200,  "source": "fallback"},
-        "psu":         {"price": 1800,  "source": "fallback"},
-        "case":        {"price": 1600,  "source": "fallback"},
+        "cpu": {
+          "price": 7500,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 4800,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 3000,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 12000,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 2200,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 1800,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 1600,
+          "source": "fallback"
+        },
         "_total": 32900
       },
       "high": {
-        "cpu":         {"price": 12000, "source": "fallback"},
-        "motherboard": {"price": 8500,  "source": "fallback"},
-        "ram":         {"price": 5500,  "source": "fallback"},
-        "gpu":         {"price": 22000, "source": "fallback"},
-        "ssd":         {"price": 3800,  "source": "fallback"},
-        "psu":         {"price": 2800,  "source": "fallback"},
-        "case":        {"price": 2500,  "source": "fallback"},
+        "cpu": {
+          "price": 12000,
+          "source": "fallback"
+        },
+        "motherboard": {
+          "price": 8500,
+          "source": "fallback"
+        },
+        "ram": {
+          "price": 5500,
+          "source": "fallback"
+        },
+        "gpu": {
+          "price": 22000,
+          "source": "fallback"
+        },
+        "ssd": {
+          "price": 3800,
+          "source": "fallback"
+        },
+        "psu": {
+          "price": 2800,
+          "source": "fallback"
+        },
+        "case": {
+          "price": 2500,
+          "source": "fallback"
+        },
         "_total": 57100
       }
     }
