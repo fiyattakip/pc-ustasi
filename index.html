@@ -6,1900 +6,563 @@
 <title>PC Ustası — Akıllı Sistem Toplayıcı</title>
 <meta name="theme-color" content="#0a0a0f">
 <link rel="manifest" href="manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --bg2: #0f0f1a;
-    --bg3: #141428;
-    --card: #12121f;
-    --border: #1e1e3a;
-    --border2: #2a2a50;
-    --accent: #00d4ff;
-    --accent2: #7b2fff;
-    --accent3: #ff6b35;
-    --green: #00ff88;
-    --yellow: #ffd60a;
-    --red: #ff3860;
-    --text: #e8e8f0;
-    --text2: #8888aa;
-    --text3: #4a4a6a;
-    --ddr3: #ff6b35;
-    --ddr4: #00d4ff;
-    --ddr5: #a855f7;
-    --budget: #00ff88;
-    --mid: #ffd60a;
-    --high: #ff3860;
-    --glow: 0 0 20px rgba(0,212,255,0.3);
-    --glow2: 0 0 30px rgba(123,47,255,0.3);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* BG GRID */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* HEADER */
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10,10,15,0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 16px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--accent);
-    text-shadow: 0 0 20px rgba(0,212,255,0.5);
-  }
-
-  .logo span { color: var(--accent2); }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .api-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'JetBrains Mono', monospace;
-    transition: all 0.2s;
-  }
-  .api-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .api-btn.active { border-color: var(--green); color: var(--green); }
-
-  /* MAIN */
-  main {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px 16px 100px;
-  }
-
-  /* HERO */
-  .hero {
-    text-align: center;
-    padding: 30px 0 24px;
-  }
-
-  .hero-tag {
-    display: inline-block;
-    background: rgba(0,212,255,0.1);
-    border: 1px solid rgba(0,212,255,0.3);
-    color: var(--accent);
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 3px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-  }
-
-  .hero h1 {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(28px, 6vw, 48px);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 12px;
-  }
-
-  .hero h1 .line1 { color: var(--text); }
-  .hero h1 .line2 {
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .hero p {
-    color: var(--text2);
-    font-size: 14px;
-    max-width: 400px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  /* STEPS */
-  .steps {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin: 24px 0;
-    flex-wrap: wrap;
-  }
-
-  .step {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text3);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .step.active { color: var(--accent); }
-  .step.done { color: var(--green); }
-
-  .step-num {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-  }
-
-  .step-arrow { color: var(--text3); font-size: 10px; }
-
-  /* SECTION CARD */
-  .section-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    transition: border-color 0.3s;
-  }
-
-  .section-card.active { border-color: var(--accent); box-shadow: var(--glow); }
-
-  .section-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: var(--text);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .section-title .icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    background: rgba(0,212,255,0.1);
-    border: 1px solid rgba(0,212,255,0.2);
-  }
-
-  /* DDR SELECTOR */
-  .ddr-selector {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .ddr-btn {
-    background: var(--bg3);
-    border: 2px solid var(--border2);
-    border-radius: 12px;
-    padding: 14px 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ddr-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .ddr-btn.ddr3-btn { --clr: var(--ddr3); }
-  .ddr-btn.ddr4-btn { --clr: var(--ddr4); }
-  .ddr-btn.ddr5-btn { --clr: var(--ddr5); }
-
-  .ddr-btn::before { background: radial-gradient(circle at center, color-mix(in srgb, var(--clr) 15%, transparent), transparent 70%); }
-
-  .ddr-btn:hover::before, .ddr-btn.selected::before { opacity: 1; }
-  .ddr-btn:hover, .ddr-btn.selected { border-color: var(--clr); }
-
-  .ddr-badge {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--clr);
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .ddr-label {
-    font-size: 10px;
-    color: var(--text2);
-    display: block;
-    line-height: 1.4;
-  }
-
-  .ddr-price {
-    font-size: 11px;
-    color: var(--clr);
-    font-family: 'JetBrains Mono', monospace;
-    margin-top: 6px;
-    display: block;
-    opacity: 0.8;
-  }
-
-  /* RESOLUTION */
-  .res-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .res-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 10px 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-  }
-
-  .res-btn:hover, .res-btn.selected {
-    border-color: var(--accent2);
-    background: rgba(123,47,255,0.1);
-  }
-
-  .res-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--accent2);
-    display: block;
-  }
-
-  .res-desc { font-size: 10px; color: var(--text2); }
-
-  /* FPS TARGET */
-  .fps-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
-  .fps-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 10px 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-  }
-
-  .fps-btn:hover, .fps-btn.selected {
-    border-color: var(--green);
-    background: rgba(0,255,136,0.08);
-  }
-
-  .fps-num {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--green);
-    display: block;
-  }
-
-  .fps-desc { font-size: 10px; color: var(--text2); }
-
-  /* GAMES */
-  .game-categories { display: flex; flex-direction: column; gap: 14px; }
-
-  .game-cat-title {
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text3);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .game-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-
-  .game-check {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-  }
-
-  .game-check:hover { border-color: var(--border2); }
-  .game-check.checked { border-color: var(--accent2); background: rgba(123,47,255,0.1); }
-
-  .game-checkbox {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.15s;
-    font-size: 10px;
-  }
-
-  .game-check.checked .game-checkbox {
-    background: var(--accent2);
-    border-color: var(--accent2);
-  }
-
-  .game-name { font-size: 12px; color: var(--text2); }
-  .game-check.checked .game-name { color: var(--text); }
-
-  /* BUILD BUTTON */
-  .build-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--accent2), var(--accent));
-    border: none;
-    border-radius: 14px;
-    color: white;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .build-btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-  }
-
-  .build-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(123,47,255,0.4); }
-  .build-btn:active { transform: translateY(0); }
-  .build-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-  /* API KEY MODAL */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(10px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: 20px;
-    padding: 28px 24px;
-    width: 100%;
-    max-width: 420px;
-    transform: translateY(20px);
-    transition: transform 0.3s;
-  }
-
-  .modal-overlay.open .modal { transform: translateY(0); }
-
-  .modal-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .modal-desc {
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 20px;
-    line-height: 1.6;
-  }
-
-  .modal-desc a { color: var(--accent); text-decoration: none; }
-
-  .modal-input {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    outline: none;
-    transition: border-color 0.2s;
-    margin-bottom: 12px;
-  }
-
-  .modal-input:focus { border-color: var(--accent); }
-
-  .modal-save {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent);
-    border: none;
-    border-radius: 10px;
-    color: var(--bg);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .modal-save:hover { background: #00b8e0; }
-
-  .modal-warning {
-    background: rgba(255,56,96,0.1);
-    border: 1px solid rgba(255,56,96,0.3);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 11px;
-    color: #ff8080;
-    margin-top: 12px;
-    line-height: 1.5;
-  }
-
-  /* LOADING */
-  .loading-section {
-    display: none;
-    text-align: center;
-    padding: 40px 20px;
-  }
-
-  .loading-section.show { display: block; }
-
-  .loader {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid var(--border2);
-    border-top-color: var(--accent);
-    border-right-color: var(--accent2);
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 20px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 18px;
-    color: var(--text2);
-    margin-bottom: 8px;
-  }
-
-  .loading-sub {
-    font-size: 12px;
-    color: var(--text3);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* RESULTS */
-  .results-section { display: none; }
-  .results-section.show { display: block; }
-
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .results-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .reset-btn {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .reset-btn:hover { border-color: var(--red); color: var(--red); }
-
-  /* SYSTEM TABS */
-  .segment-tabs {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .seg-tab {
-    background: var(--bg3);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-  }
-
-  .seg-tab.budget { --clr: var(--budget); }
-  .seg-tab.mid { --clr: var(--mid); }
-  .seg-tab.high { --clr: var(--high); }
-
-  .seg-tab:hover, .seg-tab.active {
-    border-color: var(--clr);
-    background: color-mix(in srgb, var(--clr) 8%, var(--bg3));
-  }
-
-  .seg-icon { font-size: 20px; display: block; margin-bottom: 4px; }
-
-  .seg-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--clr);
-    display: block;
-  }
-
-  .seg-price {
-    font-size: 11px;
-    color: var(--text2);
-    font-family: 'JetBrains Mono', monospace;
-    margin-top: 2px;
-    display: block;
-  }
-
-  /* SYSTEM CARD */
-  .system-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    display: none;
-  }
-
-  .system-card.show { display: block; }
-
-  .system-card-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .system-card-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  .ddr-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-  }
-
-  /* PARTS LIST */
-  .parts-list { padding: 16px 20px; }
-
-  .part-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    gap: 10px;
-  }
-
-  .part-row:last-child { border-bottom: none; }
-
-  .part-left {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .part-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    flex-shrink: 0;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-  }
-
-  .part-info { flex: 1; min-width: 0; }
-
-  .part-type {
-    font-size: 10px;
-    color: var(--text3);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .part-name {
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .part-spec {
-    font-size: 11px;
-    color: var(--text2);
-  }
-
-  .part-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .part-price {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-    white-space: nowrap;
-  }
-
-  .part-link {
-    font-size: 10px;
-    color: var(--text3);
-    text-decoration: none;
-    border: 1px solid var(--border2);
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .part-link:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* TOTAL */
-  .total-bar {
-    padding: 16px 20px;
-    background: var(--bg3);
-    border-top: 1px solid var(--border2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .total-label {
-    font-size: 12px;
-    color: var(--text2);
-  }
-
-  .total-price {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--green);
-  }
-
-  .cart-btn {
-    background: var(--green);
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-    color: var(--bg);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 1px;
-  }
-
-  .cart-btn:hover { background: #00e07a; transform: translateY(-1px); }
-
-  /* FPS TABLE */
-  .fps-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-top: 16px;
-  }
-
-  .fps-header {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .fps-table { width: 100%; border-collapse: collapse; }
-
-  .fps-table th {
-    padding: 10px 16px;
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text3);
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    letter-spacing: 1px;
-  }
-
-  .fps-table td {
-    padding: 10px 16px;
-    font-size: 13px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .fps-table tr:last-child td { border-bottom: none; }
-
-  .fps-table td:first-child { color: var(--text); }
-
-  .fps-val {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 500;
-  }
-
-  .fps-val.budget { color: var(--budget); }
-  .fps-val.mid { color: var(--mid); }
-  .fps-val.high { color: var(--high); }
-
-  .fps-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .fps-bar {
-    height: 4px;
-    border-radius: 2px;
-    min-width: 20px;
-    transition: width 0.5s ease;
-  }
-
-  .fps-bar.budget { background: var(--budget); }
-  .fps-bar.mid { background: var(--mid); }
-  .fps-bar.high { background: var(--high); }
-
-  /* CART PANEL */
-  .cart-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 150;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .cart-panel.open { transform: translateY(0); }
-
-  .cart-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 149;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .cart-backdrop.open { opacity: 1; pointer-events: all; }
-
-  .cart-inner {
-    background: var(--bg2);
-    border-top: 1px solid var(--border2);
-    border-radius: 20px 20px 0 0;
-    padding: 20px 16px;
-    max-height: 80vh;
-    overflow-y: auto;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .cart-handle {
-    width: 40px;
-    height: 4px;
-    background: var(--border2);
-    border-radius: 2px;
-    margin: 0 auto 20px;
-  }
-
-  .cart-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    gap: 10px;
-  }
-
-  .cart-item-name { font-size: 13px; color: var(--text); flex: 1; }
-  .cart-item-type { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
-
-  .cart-item-price {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-
-  .cart-remove {
-    background: none;
-    border: none;
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 16px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: color 0.15s;
-  }
-
-  .cart-remove:hover { color: var(--red); }
-
-  .cart-total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0 8px;
-    border-top: 1px solid var(--border2);
-    margin-top: 8px;
-  }
-
-  .cart-total-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    color: var(--text2);
-  }
-
-  .cart-total-price {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--green);
-  }
-
-  .cart-links-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 12px;
-    color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-
-  .cart-links-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* CART FAB */
-  .cart-fab {
-    position: fixed;
-    bottom: 20px;
-    right: 16px;
-    z-index: 140;
-    background: linear-gradient(135deg, var(--accent2), var(--accent));
-    border: none;
-    border-radius: 50%;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(123,47,255,0.4);
-    transition: transform 0.2s;
-    display: none;
-  }
-
-  .cart-fab.show { display: flex; }
-  .cart-fab:hover { transform: scale(1.1); }
-
-  .cart-fab-badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    background: var(--red);
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* AI COMMENT */
-  .ai-comment {
-    background: rgba(123,47,255,0.08);
-    border: 1px solid rgba(123,47,255,0.2);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.6;
-  }
-
-  .ai-comment-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--accent2);
-    letter-spacing: 1px;
-  }
-
-  /* ERROR */
-  .error-box {
-    background: rgba(255,56,96,0.1);
-    border: 1px solid rgba(255,56,96,0.3);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    color: #ff8080;
-    font-size: 13px;
-    display: none;
-  }
-
-  .error-box.show { display: block; }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate-in { animation: fadeUp 0.4s ease forwards; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-  /* RESPONSIVE */
-  @media (min-width: 600px) {
-    .game-grid { grid-template-columns: repeat(3, 1fr); }
-  }
+:root{--bg:#0a0a0f;--bg2:#0f0f1a;--bg3:#141428;--card:#12121f;--border:#1e1e3a;--border2:#2a2a50;--accent:#00d4ff;--accent2:#7b2fff;--green:#00ff88;--yellow:#ffd60a;--red:#ff3860;--text:#e8e8f0;--text2:#8888aa;--text3:#4a4a6a;--ddr3:#ff6b35;--ddr4:#00d4ff;--ddr5:#a855f7;--budget:#00ff88;--mid:#ffd60a;--high:#ff3860}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+header{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 16px;height:60px;display:flex;align-items:center}
+.logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;color:var(--accent);text-shadow:0 0 20px rgba(0,212,255,0.5)}
+.logo span{color:var(--accent2)}
+main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px 100px}
+.hero{text-align:center;padding:30px 0 24px}
+.hero-tag{display:inline-block;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--accent);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:3px;padding:4px 12px;border-radius:20px;margin-bottom:16px;text-transform:uppercase}
+.hero h1{font-family:'Rajdhani',sans-serif;font-size:clamp(28px,6vw,48px);font-weight:700;line-height:1.1;margin-bottom:12px}
+.line1{color:var(--text)}.line2{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:14px;max-width:400px;margin:0 auto;line-height:1.6}
+.info-box{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.7}
+.info-box strong{color:var(--green)}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;letter-spacing:1px;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2)}
+.ddr-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ddr-btn{background:var(--bg3);border:2px solid var(--border2);border-radius:12px;padding:14px 10px;cursor:pointer;text-align:center;transition:all 0.2s}
+.ddr-btn.ddr3-btn{--clr:var(--ddr3)}.ddr-btn.ddr4-btn{--clr:var(--ddr4)}.ddr-btn.ddr5-btn{--clr:var(--ddr5)}
+.ddr-btn:hover,.ddr-btn.selected{border-color:var(--clr);background:color-mix(in srgb,var(--clr) 8%,var(--bg3))}
+.ddr-badge{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--clr);display:block;margin-bottom:4px}
+.ddr-label{font-size:10px;color:var(--text2);display:block;line-height:1.4}
+.ddr-price{font-size:11px;color:var(--clr);font-family:'JetBrains Mono',monospace;margin-top:6px;display:block;opacity:0.8}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.res-btn,.fps-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;transition:all 0.2s}
+.res-btn:hover,.res-btn.selected{border-color:var(--accent2);background:rgba(123,47,255,0.1)}
+.fps-btn:hover,.fps-btn.selected{border-color:var(--green);background:rgba(0,255,136,0.08)}
+.res-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent2);display:block}
+.res-desc,.fps-desc{font-size:10px;color:var(--text2)}
+.fps-num{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--green);display:block}
+.game-categories{display:flex;flex-direction:column;gap:14px}
+.game-cat-title{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.game-check{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;transition:all 0.15s;user-select:none}
+.game-check.checked{border-color:var(--accent2);background:rgba(123,47,255,0.1)}
+.game-checkbox{width:16px;height:16px;border-radius:4px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px}
+.game-check.checked .game-checkbox{background:var(--accent2);border-color:var(--accent2)}
+.game-name{font-size:12px;color:var(--text2)}
+.game-check.checked .game-name{color:var(--text)}
+.build-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent2),var(--accent));border:none;border-radius:14px;color:white;font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.build-btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(123,47,255,0.4)}
+.build-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.loading-section{display:none;text-align:center;padding:40px 20px}
+.loading-section.show{display:block}
+.loader{width:60px;height:60px;border-radius:50%;border:3px solid var(--border2);border-top-color:var(--accent);border-right-color:var(--accent2);animation:spin 0.8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Rajdhani',sans-serif;font-size:18px;color:var(--text2);margin-bottom:8px}
+.loading-sub{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.results-section{display:none}
+.results-section.show{display:block}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.results-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700}
+.reset-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer}
+.reset-btn:hover{border-color:var(--red);color:var(--red)}
+.segment-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.seg-tab{background:var(--bg3);border:2px solid var(--border);border-radius:12px;padding:12px 8px;cursor:pointer;text-align:center;transition:all 0.2s}
+.seg-tab.budget{--clr:var(--budget)}.seg-tab.mid{--clr:var(--mid)}.seg-tab.high{--clr:var(--high)}
+.seg-tab:hover,.seg-tab.active{border-color:var(--clr);background:color-mix(in srgb,var(--clr) 8%,var(--bg3))}
+.seg-icon{font-size:20px;display:block;margin-bottom:4px}
+.seg-name{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--clr);display:block}
+.seg-price{font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-top:2px;display:block}
+.system-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:none}
+.system-card.show{display:block}
+.system-card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.system-card-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700}
+.ddr-tag{font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 8px;border-radius:4px}
+.parts-list{padding:12px 20px}
+.part-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
+.part-row:last-child{border-bottom:none}
+.part-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.part-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border2)}
+.part-info{flex:1;min-width:0}
+.part-type{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase}
+.part-name{font-size:13px;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.part-spec{font-size:11px;color:var(--text2)}
+.part-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.part-price{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;white-space:nowrap}
+.part-price.loading{color:var(--text3)}
+.part-price.loaded{color:var(--accent);font-size:13px}
+.part-price.notfound{color:var(--text3);font-size:11px}
+.part-link{font-size:10px;color:var(--text3);text-decoration:none;border:1px solid var(--border2);padding:2px 6px;border-radius:4px;transition:all 0.15s;white-space:nowrap}
+.part-link:hover{border-color:var(--accent);color:var(--accent)}
+.total-bar{padding:16px 20px;background:var(--bg3);border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.total-label{font-size:12px;color:var(--text2)}
+.total-price{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--green)}
+.cart-btn{background:var(--green);border:none;border-radius:10px;padding:10px 20px;color:var(--bg);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s}
+.cart-btn:hover{background:#00e07a}
+.fps-section{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:16px}
+.fps-header{padding:14px 20px;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:var(--text)}
+.fps-table{width:100%;border-collapse:collapse}
+.fps-table th{padding:10px 16px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);text-align:left;border-bottom:1px solid var(--border);letter-spacing:1px}
+.fps-table td{padding:10px 16px;font-size:13px;border-bottom:1px solid var(--border)}
+.fps-table tr:last-child td{border-bottom:none}
+.fps-val{font-family:'JetBrains Mono',monospace;font-weight:500}
+.fps-val.budget{color:var(--budget)}.fps-val.mid{color:var(--mid)}.fps-val.high{color:var(--high)}
+.fps-bar-wrap{display:flex;align-items:center;gap:8px}
+.fps-bar{height:4px;border-radius:2px;min-width:4px}
+.fps-bar.budget{background:var(--budget)}.fps-bar.mid{background:var(--mid)}.fps-bar.high{background:var(--high)}
+.price-status{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.price-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.cart-panel{position:fixed;bottom:0;left:0;right:0;z-index:150;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.cart-panel.open{transform:translateY(0)}
+.cart-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:149;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.cart-backdrop.open{opacity:1;pointer-events:all}
+.cart-inner{background:var(--bg2);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;padding:20px 16px;max-height:80vh;overflow-y:auto;max-width:600px;margin:0 auto}
+.cart-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px}
+.cart-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
+.cart-item-name{font-size:13px;color:var(--text);flex:1}
+.cart-item-type{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.cart-item-price{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);flex-shrink:0}
+.cart-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px}
+.cart-remove:hover{color:var(--red)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0 8px;border-top:1px solid var(--border2);margin-top:8px}
+.cart-total-label{font-family:'Rajdhani',sans-serif;font-size:16px;color:var(--text2)}
+.cart-total-price{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--green)}
+.cart-links-btn{width:100%;padding:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:16px;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.cart-links-btn:hover{border-color:var(--accent);color:var(--accent)}
+.cart-fab{position:fixed;bottom:20px;right:16px;z-index:140;background:linear-gradient(135deg,var(--accent2),var(--accent));border:none;border-radius:50%;width:56px;height:56px;display:none;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(123,47,255,0.4);transition:transform 0.2s}
+.cart-fab.show{display:flex}
+.cart-fab-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:white;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+@media(min-width:600px){.game-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
-<header>
-  <div class="logo">PC<span>USTA</span></div>
-  <div class="header-right">
-    <button class="api-btn" id="apiBtn" onclick="openModal()">🔑 API KEY</button>
-  </div>
-</header>
-
-<!-- MAIN -->
+<header><div class="logo">PC<span>USTA</span></div></header>
 <main>
-
-  <!-- HERO -->
   <div class="hero">
-    <div class="hero-tag">⚡ AI Destekli Sistem Toplayıcı</div>
-    <h1>
-      <span class="line1">Sana Özel</span><br>
-      <span class="line2">PC Sistemi Kur</span>
-    </h1>
-    <p>DDR neslini seç, oyunlarını işaretle — AI en iyi 3 segmenti senin için toplayıp fiyatlarını göstersin.</p>
+    <div class="hero-tag">⚡ Akakce Fiyatlı Sistem Toplayıcı</div>
+    <h1><span class="line1">Sana Özel</span><br><span class="line2">PC Sistemi Kur</span></h1>
+    <p>DDR neslini seç, oyunlarını işaretle — Akakce'den canlı fiyatlarla sistemi bul.</p>
   </div>
 
-  <!-- FORM SECTION -->
   <div id="formSection">
+    <div class="info-box">
+      <strong>✅ Tamamen Ücretsiz!</strong> API key gerekmez. Sistem önerileri hazır, fiyatlar <strong>Akakce'den canlı</strong> çekilir.
+    </div>
 
-    <!-- DDR SEÇİMİ -->
-    <div class="section-card active">
-      <div class="section-title">
-        <div class="icon">🧠</div>
-        RAM Nesli Seç
-      </div>
+    <div class="section-card">
+      <div class="section-title"><div class="icon">🧠</div>RAM Nesli Seç</div>
       <div class="ddr-selector">
-        <div class="ddr-btn ddr3-btn" onclick="selectDDR('ddr3', this)">
-          <span class="ddr-badge">DDR3</span>
-          <span class="ddr-label">Eski nesil<br>ikinci el</span>
-          <span class="ddr-price">~3K–12K ₺</span>
-        </div>
-        <div class="ddr-btn ddr4-btn" onclick="selectDDR('ddr4', this)">
-          <span class="ddr-badge">DDR4</span>
-          <span class="ddr-label">En yaygın<br>fiyat/perf</span>
-          <span class="ddr-price">~10K–30K ₺</span>
-        </div>
-        <div class="ddr-btn ddr5-btn" onclick="selectDDR('ddr5', this)">
-          <span class="ddr-badge">DDR5</span>
-          <span class="ddr-label">Yeni nesil<br>gelecek</span>
-          <span class="ddr-price">~18K–50K ₺</span>
-        </div>
+        <div class="ddr-btn ddr3-btn" onclick="sel('ddr','ddr3',this)"><span class="ddr-badge">DDR3</span><span class="ddr-label">Eski nesil<br>ikinci el</span><span class="ddr-price">~3K–12K ₺</span></div>
+        <div class="ddr-btn ddr4-btn" onclick="sel('ddr','ddr4',this)"><span class="ddr-badge">DDR4</span><span class="ddr-label">En yaygın<br>fiyat/perf</span><span class="ddr-price">~10K–30K ₺</span></div>
+        <div class="ddr-btn ddr5-btn" onclick="sel('ddr','ddr5',this)"><span class="ddr-badge">DDR5</span><span class="ddr-label">Yeni nesil<br>gelecek</span><span class="ddr-price">~18K–50K ₺</span></div>
       </div>
     </div>
 
-    <!-- ÇÖZÜNÜRLÜK -->
     <div class="section-card">
-      <div class="section-title">
-        <div class="icon">🖥️</div>
-        Monitör Çözünürlüğü
-      </div>
+      <div class="section-title"><div class="icon">🖥️</div>Monitör Çözünürlüğü</div>
       <div class="res-grid">
-        <div class="res-btn" onclick="selectRes('1080p', this)">
-          <span class="res-name">1080p</span>
-          <span class="res-desc">Full HD</span>
-        </div>
-        <div class="res-btn" onclick="selectRes('1440p', this)">
-          <span class="res-name">1440p</span>
-          <span class="res-desc">2K / QHD</span>
-        </div>
-        <div class="res-btn" onclick="selectRes('4K', this)">
-          <span class="res-name">4K</span>
-          <span class="res-desc">Ultra HD</span>
-        </div>
+        <div class="res-btn" onclick="sel('res','1080p',this)"><span class="res-name">1080p</span><span class="res-desc">Full HD</span></div>
+        <div class="res-btn" onclick="sel('res','1440p',this)"><span class="res-name">1440p</span><span class="res-desc">2K / QHD</span></div>
+        <div class="res-btn" onclick="sel('res','4K',this)"><span class="res-name">4K</span><span class="res-desc">Ultra HD</span></div>
       </div>
     </div>
 
-    <!-- HEDEF FPS -->
     <div class="section-card">
-      <div class="section-title">
-        <div class="icon">🎯</div>
-        Hedef FPS
-      </div>
+      <div class="section-title"><div class="icon">🎯</div>Hedef FPS</div>
       <div class="fps-grid">
-        <div class="fps-btn" onclick="selectFPS('60', this)">
-          <span class="fps-num">60fps</span>
-          <span class="fps-desc">Standart</span>
-        </div>
-        <div class="fps-btn" onclick="selectFPS('144', this)">
-          <span class="fps-num">144fps</span>
-          <span class="fps-desc">Akıcı</span>
-        </div>
-        <div class="fps-btn" onclick="selectFPS('240', this)">
-          <span class="fps-num">240fps+</span>
-          <span class="fps-desc">Rekabetçi</span>
-        </div>
+        <div class="fps-btn" onclick="sel('fps','60',this)"><span class="fps-num">60fps</span><span class="fps-desc">Standart</span></div>
+        <div class="fps-btn" onclick="sel('fps','144',this)"><span class="fps-num">144fps</span><span class="fps-desc">Akıcı</span></div>
+        <div class="fps-btn" onclick="sel('fps','240',this)"><span class="fps-num">240fps+</span><span class="fps-desc">Rekabetçi</span></div>
       </div>
     </div>
 
-    <!-- OYUNLAR -->
     <div class="section-card">
-      <div class="section-title">
-        <div class="icon">🎮</div>
-        Oyunlarını Seç
-      </div>
+      <div class="section-title"><div class="icon">🎮</div>Oyunlarını Seç</div>
       <div class="game-categories">
-
-        <div>
-          <div class="game-cat-title">// FPS & Aksiyon</div>
-          <div class="game-grid" id="catFPS"></div>
-        </div>
-
-        <div>
-          <div class="game-cat-title">// Açık Dünya & RPG</div>
-          <div class="game-grid" id="catRPG"></div>
-        </div>
-
-        <div>
-          <div class="game-cat-title">// Spor & Yarış</div>
-          <div class="game-grid" id="catSport"></div>
-        </div>
-
-        <div>
-          <div class="game-cat-title">// MOBA & Strateji</div>
-          <div class="game-grid" id="catMOBA"></div>
-        </div>
-
-        <div>
-          <div class="game-cat-title">// Simülasyon</div>
-          <div class="game-grid" id="catSim"></div>
-        </div>
-
+        <div><div class="game-cat-title">// FPS & Aksiyon</div><div class="game-grid" id="catFPS"></div></div>
+        <div><div class="game-cat-title">// Açık Dünya & RPG</div><div class="game-grid" id="catRPG"></div></div>
+        <div><div class="game-cat-title">// Spor & Yarış</div><div class="game-grid" id="catSport"></div></div>
+        <div><div class="game-cat-title">// MOBA & Strateji</div><div class="game-grid" id="catMOBA"></div></div>
+        <div><div class="game-cat-title">// Simülasyon</div><div class="game-grid" id="catSim"></div></div>
       </div>
     </div>
 
-    <!-- BUILD BUTTON -->
-    <button class="build-btn" id="buildBtn" onclick="buildSystems()" disabled>
-      🤖 AI İLE SİSTEM TOPLA
-    </button>
-
+    <button class="build-btn" id="buildBtn" onclick="build()" disabled>⚙️ Seçimleri Tamamla</button>
   </div>
 
-  <!-- LOADING -->
   <div class="loading-section" id="loadingSection">
     <div class="loader"></div>
-    <div class="loading-text">AI Sistemleri Hesaplıyor...</div>
-    <div class="loading-sub" id="loadingStatus">Parçalar analiz ediliyor...</div>
+    <div class="loading-text">Sistemler Hazırlanıyor...</div>
+    <div class="loading-sub" id="loadingStatus">Parçalar seçiliyor...</div>
   </div>
 
-  <!-- ERROR -->
-  <div class="error-box" id="errorBox"></div>
-
-  <!-- RESULTS -->
   <div class="results-section" id="resultsSection">
     <div class="results-header">
       <div class="results-title">🖥️ Önerilen Sistemler</div>
-      <button class="reset-btn" onclick="resetForm()">↺ Yeniden</button>
+      <button class="reset-btn" onclick="reset()">↺ Yeniden</button>
     </div>
-
-    <!-- SEGMENT TABS -->
+    <div class="price-status" id="priceStatus">
+      <div class="price-dot" id="priceDot"></div>
+      <span id="priceStatusText">Akakce'den fiyatlar çekiliyor...</span>
+    </div>
     <div class="segment-tabs">
-      <div class="seg-tab budget active" onclick="showSegment('budget', this)">
-        <span class="seg-icon">💚</span>
-        <span class="seg-name">BÜTÇE</span>
-        <span class="seg-price" id="pricebudget">—</span>
-      </div>
-      <div class="seg-tab mid" onclick="showSegment('mid', this)">
-        <span class="seg-icon">💛</span>
-        <span class="seg-name">ORTA</span>
-        <span class="seg-price" id="pricemid">—</span>
-      </div>
-      <div class="seg-tab high" onclick="showSegment('high', this)">
-        <span class="seg-icon">🔴</span>
-        <span class="seg-name">ÜST</span>
-        <span class="seg-price" id="pricehigh">—</span>
-      </div>
+      <div class="seg-tab budget active" onclick="showSeg('budget',this)"><span class="seg-icon">💚</span><span class="seg-name">BÜTÇE</span><span class="seg-price" id="pricebudget">—</span></div>
+      <div class="seg-tab mid" onclick="showSeg('mid',this)"><span class="seg-icon">💛</span><span class="seg-name">ORTA</span><span class="seg-price" id="pricemid">—</span></div>
+      <div class="seg-tab high" onclick="showSeg('high',this)"><span class="seg-icon">🔴</span><span class="seg-name">ÜST</span><span class="seg-price" id="pricehigh">—</span></div>
     </div>
-
-    <!-- SYSTEM CARDS -->
     <div class="system-card show" id="card-budget"></div>
     <div class="system-card" id="card-mid"></div>
     <div class="system-card" id="card-high"></div>
-
-    <!-- FPS TABLE -->
-    <div class="fps-section" id="fpsSection">
+    <div class="fps-section">
       <div class="fps-header">🎮 FPS Karşılaştırması</div>
-      <div style="overflow-x:auto;">
-        <table class="fps-table" id="fpsTable">
-          <thead>
-            <tr>
-              <th>OYUN</th>
-              <th>💚 BÜTÇE</th>
-              <th>💛 ORTA</th>
-              <th>🔴 ÜST</th>
-            </tr>
-          </thead>
-          <tbody id="fpsBody"></tbody>
-        </table>
-      </div>
+      <div style="overflow-x:auto"><table class="fps-table"><thead><tr><th>OYUN</th><th>💚 BÜTÇE</th><th>💛 ORTA</th><th>🔴 ÜST</th></tr></thead><tbody id="fpsBody"></tbody></table></div>
     </div>
-
-    <!-- AI COMMENT -->
-    <div class="ai-comment" id="aiComment" style="display:none">
-      <div class="ai-comment-header">🤖 AI YORUMU</div>
-      <div id="aiCommentText"></div>
-    </div>
-
   </div>
-
 </main>
 
-<!-- CART FAB -->
-<button class="cart-fab" id="cartFab" onclick="openCart()">
-  🛒
-  <span class="cart-fab-badge" id="cartBadge">0</span>
-</button>
-
-<!-- CART BACKDROP -->
+<button class="cart-fab" id="cartFab" onclick="openCart()">🛒<span class="cart-fab-badge" id="cartBadge">0</span></button>
 <div class="cart-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
-
-<!-- CART PANEL -->
 <div class="cart-panel" id="cartPanel">
   <div class="cart-inner">
     <div class="cart-handle"></div>
     <div class="cart-title">🛒 Sepetim</div>
     <div id="cartItems"></div>
-    <div class="cart-total-row">
-      <div class="cart-total-label">Toplam</div>
-      <div class="cart-total-price" id="cartTotal">₺0</div>
-    </div>
-    <button class="cart-links-btn" onclick="openAllLinks()">🔗 Tüm Linkleri Aç (Akakce)</button>
-  </div>
-</div>
-
-<!-- API KEY MODAL -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <div class="modal-title">🔑 API Key Seç</div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
-      <div id="typeGemini" onclick="selectApiType('gemini')" style="background:var(--bg3);border:2px solid var(--accent);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all 0.2s;">
-        <div style="font-size:20px">🌀</div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent)">Gemini</div>
-        <div style="font-size:10px;color:var(--green)">✅ Ücretsiz</div>
-      </div>
-      <div id="typeClaude" onclick="selectApiType('claude')" style="background:var(--bg3);border:2px solid var(--border2);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all 0.2s;">
-        <div style="font-size:20px">🤖</div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text2)">Claude</div>
-        <div style="font-size:10px;color:var(--text3)">💳 Ücretli</div>
-      </div>
-    </div>
-
-    <div class="modal-desc" id="apiDesc">
-      🌀 <b style="color:var(--accent)">Gemini (Önerilen)</b> — Ücretsiz, günde 1500 istek.<br>
-      Key almak için: <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
-    </div>
-    <input type="password" class="modal-input" id="apiKeyInput" placeholder="AIza... (Gemini key)" />
-    <button class="modal-save" onclick="saveApiKey()">Kaydet</button>
-    <div class="modal-warning">
-      ⚠️ API key'ini kimseyle paylaşma. Sadece tarayıcında saklanır, hiçbir yere gönderilmez.
-    </div>
+    <div class="cart-total-row"><div class="cart-total-label">Toplam</div><div class="cart-total-price" id="cartTotal">₺0</div></div>
+    <button class="cart-links-btn" onclick="openLinks()">🔗 Tüm Linkleri Aç (Akakce)</button>
   </div>
 </div>
 
 <script>
-// ===== STATE =====
-let state = {
-  ddr: null,
-  resolution: null,
-  targetFPS: null,
-  games: [],
-  apiKey: localStorage.getItem('pcusta_key') || null,
-  apiType: localStorage.getItem('pcusta_api_type') || 'gemini',
-  results: null,
-  cart: JSON.parse(localStorage.getItem('pcusta_cart') || '[]'),
-  activeSegment: 'budget'
+const DB = {
+  ddr3:{
+    budget:{name:'Bütçe DDR3',parts:{
+      cpu:{n:'Intel Core i5-4590',t:'İŞLEMCİ',i:'⚙️',s:'4 Çekirdek, 3.3-3.7GHz',q:'intel i5-4590'},
+      motherboard:{n:'MSI H81M-P33',t:'ANAKART',i:'🏠',s:'LGA1150, mATX, DDR3',q:'h81 anakart lga1150'},
+      ram:{n:'16GB DDR3 1600MHz',t:'RAM',i:'🧠',s:'2×8GB DDR3 1600MHz',q:'16gb ddr3 ram'},
+      gpu:{n:'Sapphire RX 570 4GB',t:'EKRAN KARTI',i:'🎮',s:'4GB GDDR5, 256-bit',q:'rx 570 4gb ekran karti'},
+      ssd:{n:'Kingston A400 480GB',t:'SSD',i:'💾',s:'SATA3, 500MB/s',q:'kingston a400 480gb ssd'},
+      psu:{n:'Corsair CV550 550W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'550W, 80+ Bronze',q:'550w 80 plus psu'},
+      case:{n:'Aerocool Cylon Mid',t:'KASA',i:'📦',s:'Mid Tower, ATX',q:'mid tower kasa atx'}
+    }},
+    mid:{name:'Orta DDR3',parts:{
+      cpu:{n:'Intel Core i7-4770',t:'İŞLEMCİ',i:'⚙️',s:'4C/8T, 3.4-3.9GHz',q:'intel i7-4770'},
+      motherboard:{n:'Gigabyte B85M-D3H',t:'ANAKART',i:'🏠',s:'LGA1150, mATX, DDR3',q:'b85 anakart lga1150'},
+      ram:{n:'16GB DDR3 1600MHz',t:'RAM',i:'🧠',s:'2×8GB DDR3 1600MHz',q:'16gb ddr3 ram'},
+      gpu:{n:'MSI RX 580 8GB',t:'EKRAN KARTI',i:'🎮',s:'8GB GDDR5, 256-bit',q:'rx 580 8gb ekran karti'},
+      ssd:{n:'WD Green 1TB',t:'SSD',i:'💾',s:'SATA3, 545MB/s',q:'1tb ssd sata'},
+      psu:{n:'Seasonic S12III 550W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'550W, 80+ Bronze',q:'550w 80 plus psu'},
+      case:{n:'DeepCool Matrexx 55',t:'KASA',i:'📦',s:'Mid Tower, ATX',q:'mid tower kasa atx'}
+    }},
+    high:{name:'Üst DDR3',parts:{
+      cpu:{n:'Intel Core i7-4790K',t:'İŞLEMCİ',i:'⚙️',s:'4C/8T, 4.0-4.4GHz',q:'intel i7-4790k'},
+      motherboard:{n:'ASUS Z97-A',t:'ANAKART',i:'🏠',s:'LGA1150, ATX, Z97',q:'z97 anakart lga1150'},
+      ram:{n:'16GB DDR3 2133MHz',t:'RAM',i:'🧠',s:'2×8GB DDR3 2133MHz',q:'16gb ddr3 2133 ram'},
+      gpu:{n:'ZOTAC GTX 1070 8GB',t:'EKRAN KARTI',i:'🎮',s:'8GB GDDR5, 256-bit',q:'gtx 1070 8gb ekran karti'},
+      ssd:{n:'Samsung 870 EVO 1TB',t:'SSD',i:'💾',s:'SATA3, 560MB/s',q:'samsung 870 evo 1tb ssd'},
+      psu:{n:'Seasonic Focus GX 650W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'650W, 80+ Gold',q:'650w 80 plus gold psu'},
+      case:{n:'NZXT H510',t:'KASA',i:'📦',s:'Mid Tower, ATX',q:'nzxt h510 kasa'}
+    }}
+  },
+  ddr4:{
+    budget:{name:'Bütçe DDR4',parts:{
+      cpu:{n:'Intel Core i3-12100F',t:'İŞLEMCİ',i:'⚙️',s:'4C/8T, 3.3-4.3GHz',q:'intel i3-12100f'},
+      motherboard:{n:'Gigabyte H610M S2H',t:'ANAKART',i:'🏠',s:'LGA1700, mATX, DDR4',q:'h610m anakart ddr4'},
+      ram:{n:'16GB DDR4 3200MHz',t:'RAM',i:'🧠',s:'2×8GB DDR4 3200MHz',q:'16gb ddr4 3200 ram'},
+      gpu:{n:'Sapphire RX 6500 XT 4GB',t:'EKRAN KARTI',i:'🎮',s:'4GB GDDR6, 64-bit',q:'rx 6500 xt ekran karti'},
+      ssd:{n:'Kingston NV2 500GB NVMe',t:'SSD',i:'💾',s:'M.2 Gen3, 3500MB/s',q:'500gb nvme m2 ssd'},
+      psu:{n:'Corsair CV550 550W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'550W, 80+ Bronze',q:'550w 80 plus psu'},
+      case:{n:'DeepCool CC360',t:'KASA',i:'📦',s:'Mid Tower, ATX',q:'mid tower kasa atx'}
+    }},
+    mid:{name:'Orta DDR4',parts:{
+      cpu:{n:'Intel Core i5-12400F',t:'İŞLEMCİ',i:'⚙️',s:'6C/12T, 2.5-4.4GHz',q:'intel i5-12400f'},
+      motherboard:{n:'MSI PRO B660M-A DDR4',t:'ANAKART',i:'🏠',s:'LGA1700, ATX, DDR4',q:'b660 anakart ddr4'},
+      ram:{n:'16GB DDR4 3600MHz',t:'RAM',i:'🧠',s:'2×8GB DDR4 3600MHz',q:'16gb ddr4 3600 ram'},
+      gpu:{n:'Sapphire RX 6600 8GB',t:'EKRAN KARTI',i:'🎮',s:'8GB GDDR6, 128-bit',q:'rx 6600 8gb ekran karti'},
+      ssd:{n:'WD Black SN770 1TB',t:'SSD',i:'💾',s:'M.2 Gen4, 5150MB/s',q:'1tb nvme gen4 m2 ssd'},
+      psu:{n:'Seasonic Focus GX 650W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'650W, 80+ Gold',q:'650w 80 plus gold psu'},
+      case:{n:'Fractal Design Pop Air',t:'KASA',i:'📦',s:'Mid Tower, Mesh',q:'fractal design pop air kasa'}
+    }},
+    high:{name:'Üst DDR4',parts:{
+      cpu:{n:'Intel Core i7-12700F',t:'İŞLEMCİ',i:'⚙️',s:'12C/20T, 2.1-4.9GHz',q:'intel i7-12700f'},
+      motherboard:{n:'ASUS PRIME Z690-P DDR4',t:'ANAKART',i:'🏠',s:'LGA1700, ATX, Z690',q:'z690 anakart ddr4'},
+      ram:{n:'32GB DDR4 3600MHz',t:'RAM',i:'🧠',s:'2×16GB DDR4 3600MHz',q:'32gb ddr4 3600 ram'},
+      gpu:{n:'MSI RTX 3070 8GB',t:'EKRAN KARTI',i:'🎮',s:'8GB GDDR6, 256-bit',q:'rtx 3070 8gb ekran karti'},
+      ssd:{n:'Samsung 980 Pro 1TB',t:'SSD',i:'💾',s:'M.2 Gen4, 7000MB/s',q:'samsung 980 pro 1tb nvme'},
+      psu:{n:'Corsair RM750x 750W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'750W, 80+ Gold',q:'750w 80 plus gold psu'},
+      case:{n:'NZXT H510 Flow',t:'KASA',i:'📦',s:'Mid Tower, Mesh',q:'nzxt h510 flow kasa'}
+    }}
+  },
+  ddr5:{
+    budget:{name:'Bütçe DDR5',parts:{
+      cpu:{n:'Intel Core i5-13400F',t:'İŞLEMCİ',i:'⚙️',s:'10C/16T, 2.5-4.6GHz',q:'intel i5-13400f'},
+      motherboard:{n:'MSI PRO B760M-A DDR5',t:'ANAKART',i:'🏠',s:'LGA1700, mATX, DDR5',q:'b760 anakart ddr5'},
+      ram:{n:'16GB DDR5 4800MHz',t:'RAM',i:'🧠',s:'2×8GB DDR5 4800MHz',q:'16gb ddr5 4800 ram'},
+      gpu:{n:'Sapphire RX 7600 8GB',t:'EKRAN KARTI',i:'🎮',s:'8GB GDDR6, 128-bit',q:'rx 7600 8gb ekran karti'},
+      ssd:{n:'Kingston NV2 1TB NVMe',t:'SSD',i:'💾',s:'M.2 Gen4, 3500MB/s',q:'1tb nvme m2 ssd'},
+      psu:{n:'Seasonic S12III 650W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'650W, 80+ Bronze',q:'650w 80 plus psu'},
+      case:{n:'DeepCool CC560',t:'KASA',i:'📦',s:'Mid Tower, ATX',q:'mid tower kasa atx'}
+    }},
+    mid:{name:'Orta DDR5',parts:{
+      cpu:{n:'Intel Core i5-13600K',t:'İŞLEMCİ',i:'⚙️',s:'14C/20T, 3.5-5.1GHz',q:'intel i5-13600k'},
+      motherboard:{n:'ASUS PRIME B760-PLUS DDR5',t:'ANAKART',i:'🏠',s:'LGA1700, ATX, DDR5',q:'b760 anakart ddr5 atx'},
+      ram:{n:'16GB DDR5 5600MHz',t:'RAM',i:'🧠',s:'2×8GB DDR5 5600MHz',q:'16gb ddr5 5600 ram'},
+      gpu:{n:'MSI RTX 4060 8GB',t:'EKRAN KARTI',i:'🎮',s:'8GB GDDR6, 128-bit',q:'rtx 4060 8gb ekran karti'},
+      ssd:{n:'WD Black SN850X 1TB',t:'SSD',i:'💾',s:'M.2 Gen4, 7300MB/s',q:'1tb nvme gen4 m2 ssd'},
+      psu:{n:'Corsair RM750e 750W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'750W, 80+ Gold',q:'750w 80 plus gold psu'},
+      case:{n:'Lian Li Lancool 216',t:'KASA',i:'📦',s:'Mid Tower, Mesh',q:'lian li lancool kasa'}
+    }},
+    high:{name:'Üst DDR5',parts:{
+      cpu:{n:'Intel Core i7-13700K',t:'İŞLEMCİ',i:'⚙️',s:'16C/24T, 3.4-5.4GHz',q:'intel i7-13700k'},
+      motherboard:{n:'ASUS ROG STRIX Z790-H DDR5',t:'ANAKART',i:'🏠',s:'LGA1700, ATX, Z790',q:'z790 anakart ddr5'},
+      ram:{n:'32GB DDR5 6000MHz',t:'RAM',i:'🧠',s:'2×16GB DDR5 6000MHz',q:'32gb ddr5 6000 ram'},
+      gpu:{n:'ASUS RTX 4070 12GB',t:'EKRAN KARTI',i:'🎮',s:'12GB GDDR6X, 192-bit',q:'rtx 4070 12gb ekran karti'},
+      ssd:{n:'Samsung 990 Pro 2TB',t:'SSD',i:'💾',s:'M.2 Gen4, 7450MB/s',q:'samsung 990 pro 2tb nvme'},
+      psu:{n:'Corsair HX850 850W',t:'GÜÇ KAYNAĞI',i:'⚡',s:'850W, 80+ Platinum',q:'850w 80 plus platinum psu'},
+      case:{n:'Fractal Design Torrent',t:'KASA',i:'📦',s:'Mid Tower, Mesh',q:'fractal design torrent kasa'}
+    }}
+  }
 };
 
-// ===== GAMES DATA =====
-const GAMES = {
-  fps: ['Valorant','CS2','Apex Legends','Fortnite','COD Warzone','Overwatch 2','PUBG','Rainbow Six Siege','Rust','Escape from Tarkov'],
-  rpg: ['GTA V','GTA VI','Cyberpunk 2077','Red Dead Redemption 2','Witcher 3','Elden Ring','AC Valhalla','Hogwarts Legacy','Starfield','Baldur\'s Gate 3'],
-  sport: ['EA FC 25','F1 24','Forza Horizon 5','NFS Unbound','Rocket League','WWE 2K24'],
-  moba: ['League of Legends','DOTA 2','Age of Empires IV','Total War Warhammer'],
-  sim: ['Minecraft','The Sims 4','Euro Truck Simulator 2','Microsoft Flight Simulator','Cities Skylines 2']
+const FPS = {
+  ddr3:{
+    'Valorant':{b:140,m:190,h:240},'CS2':{b:130,m:175,h:220},'Apex Legends':{b:85,m:120,h:155},
+    'Fortnite':{b:75,m:105,h:135},'PUBG':{b:55,m:78,h:98},'Overwatch 2':{b:90,m:125,h:160},
+    'GTA V':{b:58,m:85,h:115},'Witcher 3':{b:42,m:62,h:82},'Minecraft':{b:120,m:165,h:205},
+    'League of Legends':{b:150,m:200,h:245},'DOTA 2':{b:90,m:125,h:155},'Rocket League':{b:130,m:175,h:215},
+    'Rust':{b:45,m:65,h:85},'Euro Truck Simulator 2':{b:80,m:110,h:140}
+  },
+  ddr4:{
+    'Valorant':{b:165,m:230,h:320},'CS2':{b:148,m:205,h:285},'Apex Legends':{b:110,m:158,h:215},
+    'Fortnite':{b:95,m:142,h:195},'PUBG':{b:80,m:118,h:162},'Overwatch 2':{b:120,m:168,h:225},
+    'GTA V':{b:72,m:104,h:148},'Cyberpunk 2077':{b:38,m:62,h:95},'Witcher 3':{b:58,m:88,h:122},
+    'Elden Ring':{b:55,m:78,h:105},'Minecraft':{b:155,m:235,h:315},'League of Legends':{b:185,m:255,h:310},
+    'DOTA 2':{b:112,m:162,h:218},'Rocket League':{b:145,m:208,h:268},'Rust':{b:60,m:88,h:120},
+    'EA FC 25':{b:82,m:115,h:145},'Forza Horizon 5':{b:65,m:95,h:130},'Euro Truck Simulator 2':{b:95,m:135,h:175},
+    'Hogwarts Legacy':{b:42,m:65,h:95},'AC Valhalla':{b:48,m:72,h:100}
+  },
+  ddr5:{
+    'Valorant':{b:175,m:285,h:430},'CS2':{b:158,m:255,h:385},'Apex Legends':{b:118,m:188,h:272},
+    'Fortnite':{b:105,m:178,h:262},'PUBG':{b:88,m:138,h:196},'Overwatch 2':{b:128,m:195,h:275},
+    'GTA V':{b:80,m:122,h:175},'Cyberpunk 2077':{b:42,m:78,h:128},'Witcher 3':{b:65,m:105,h:148},
+    'Elden Ring':{b:60,m:90,h:122},'Minecraft':{b:175,m:325,h:510},'League of Legends':{b:195,m:290,h:415},
+    'DOTA 2':{b:120,m:185,h:268},'Rocket League':{b:155,m:255,h:355},'Rust':{b:68,m:105,h:148},
+    'EA FC 25':{b:92,m:135,h:144},'Forza Horizon 5':{b:75,m:115,h:160},'Euro Truck Simulator 2':{b:108,m:162,h:215},
+    'Hogwarts Legacy':{b:50,m:82,h:122},'AC Valhalla':{b:55,m:88,h:125},'Starfield':{b:40,m:68,h:100}
+  }
 };
 
-// ===== INIT =====
-function init() {
-  renderGames();
-  updateApiBtn();
+const GAMES={
+  fps:['Valorant','CS2','Apex Legends','Fortnite','COD Warzone','Overwatch 2','PUBG','Rainbow Six Siege','Rust','Escape from Tarkov'],
+  rpg:['GTA V','GTA VI','Cyberpunk 2077','Red Dead Redemption 2','Witcher 3','Elden Ring','AC Valhalla','Hogwarts Legacy','Starfield',"Baldur's Gate 3"],
+  sport:['EA FC 25','F1 24','Forza Horizon 5','NFS Unbound','Rocket League','WWE 2K24'],
+  moba:['League of Legends','DOTA 2','Age of Empires IV','Total War Warhammer'],
+  sim:['Minecraft','The Sims 4','Euro Truck Simulator 2','Microsoft Flight Simulator','Cities Skylines 2']
+};
+
+let S={ddr:null,res:null,fps:null,games:[],cart:JSON.parse(localStorage.getItem('pc_cart')||'[]'),prices:{},active:'budget'};
+
+function init(){
+  const cm={fps:'catFPS',rpg:'catRPG',sport:'catSport',moba:'catMOBA',sim:'catSim'};
+  Object.entries(GAMES).forEach(([c,gs])=>{
+    document.getElementById(cm[c]).innerHTML=gs.map(g=>`<div class="game-check" onclick="tog('${g.replace(/'/g,"\\'")}',this)"><div class="game-checkbox">✓</div><span class="game-name">${g}</span></div>`).join('');
+  });
   renderCart();
 }
 
-function renderGames() {
-  Object.entries(GAMES).forEach(([cat, games]) => {
-    const catMap = { fps:'catFPS', rpg:'catRPG', sport:'catSport', moba:'catMOBA', sim:'catSim' };
-    const el = document.getElementById(catMap[cat]);
-    el.innerHTML = games.map(g => `
-      <div class="game-check" onclick="toggleGame('${g}', this)">
-        <div class="game-checkbox">✓</div>
-        <span class="game-name">${g}</span>
-      </div>
-    `).join('');
-  });
-}
-
-// ===== SELECTORS =====
-function selectDDR(val, el) {
-  document.querySelectorAll('.ddr-btn').forEach(b => b.classList.remove('selected'));
+function sel(type,v,el){
+  const cls=type==='ddr'?'.ddr-btn':type==='res'?'.res-btn':'.fps-btn';
+  document.querySelectorAll(cls).forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
-  state.ddr = val;
-  checkReady();
+  S[type]=v;chk();
 }
 
-function selectRes(val, el) {
-  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  state.resolution = val;
-  checkReady();
-}
-
-function selectFPS(val, el) {
-  document.querySelectorAll('.fps-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  state.targetFPS = val;
-  checkReady();
-}
-
-function toggleGame(name, el) {
+function tog(name,el){
   el.classList.toggle('checked');
-  if (el.classList.contains('checked')) {
-    if (!state.games.includes(name)) state.games.push(name);
-  } else {
-    state.games = state.games.filter(g => g !== name);
-  }
-  checkReady();
+  if(el.classList.contains('checked')){if(!S.games.includes(name))S.games.push(name);}
+  else S.games=S.games.filter(g=>g!==name);
+  chk();
 }
 
-function checkReady() {
-  const btn = document.getElementById('buildBtn');
-  const ready = state.ddr && state.resolution && state.targetFPS && state.games.length > 0 && state.apiKey;
-  btn.disabled = !ready;
-  if (!state.apiKey) btn.textContent = '🔑 Önce API Key Gir';
-  else if (!state.ddr || !state.resolution || !state.targetFPS) btn.textContent = '⚙️ Seçimleri Tamamla';
-  else if (state.games.length === 0) btn.textContent = '🎮 Oyun Seç';
-  else btn.textContent = '🤖 AI İLE SİSTEM TOPLA';
+function chk(){
+  const btn=document.getElementById('buildBtn');
+  const ok=S.ddr&&S.res&&S.fps&&S.games.length>0;
+  btn.disabled=!ok;
+  btn.textContent=!S.ddr||!S.res||!S.fps?'⚙️ Seçimleri Tamamla':S.games.length===0?'🎮 Oyun Seç':'🚀 SİSTEMLERİ GÖSTER';
 }
 
-// ===== API KEY =====
-function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-let selectedApiType = localStorage.getItem('pcusta_api_type') || 'gemini';
-
-function selectApiType(type) {
-  selectedApiType = type;
-  const geminiBtn = document.getElementById('typeGemini');
-  const claudeBtn = document.getElementById('typeClaude');
-  const desc = document.getElementById('apiDesc');
-  const input = document.getElementById('apiKeyInput');
-
-  if (type === 'gemini') {
-    geminiBtn.style.borderColor = 'var(--accent)';
-    claudeBtn.style.borderColor = 'var(--border2)';
-    desc.innerHTML = '🌀 <b style="color:var(--accent)">Gemini (Önerilen)</b> — Ücretsiz, günde 1500 istek.<br>Key almak için: <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key';
-    input.placeholder = 'AIza... (Gemini key)';
-  } else {
-    claudeBtn.style.borderColor = 'var(--accent2)';
-    geminiBtn.style.borderColor = 'var(--border2)';
-    desc.innerHTML = '🤖 <b style="color:var(--accent2)">Claude API</b> — Ücretli, $5 kredi gerekli.<br>Key almak için: <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys';
-    input.placeholder = 'sk-ant-api03-... (Claude key)';
-  }
-}
-
-function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key || key.length < 10) {
-    alert('Geçersiz API key!');
-    return;
-  }
-  // Auto detect type
-  if (key.startsWith('sk-ant')) {
-    selectedApiType = 'claude';
-  } else {
-    selectedApiType = 'gemini';
-  }
-  state.apiKey = key;
-  state.apiType = selectedApiType;
-  localStorage.setItem('pcusta_key', key);
-  localStorage.setItem('pcusta_api_type', selectedApiType);
-  updateApiBtn();
-  closeModal();
-  checkReady();
-}
-
-function updateApiBtn() {
-  const btn = document.getElementById('apiBtn');
-  if (state.apiKey) {
-    btn.textContent = '✅ API HAZIR';
-    btn.classList.add('active');
-  } else {
-    btn.textContent = '🔑 API KEY';
-    btn.classList.remove('active');
-  }
-}
-
-// ===== BUILD =====
-async function buildSystems() {
-  if (!state.apiKey) { openModal(); return; }
-
-  // Show loading
-  document.getElementById('formSection').style.display = 'none';
+function build(){
+  document.getElementById('formSection').style.display='none';
   document.getElementById('loadingSection').classList.add('show');
-  document.getElementById('errorBox').classList.remove('show');
-
-  const loadingMsgs = [
-    'Parçalar analiz ediliyor...',
-    'Fiyat/performans hesaplanıyor...',
-    'FPS değerleri belirleniyor...',
-    'Sistemler derleniyor...'
-  ];
-  let msgIdx = 0;
-  const msgTimer = setInterval(() => {
-    msgIdx = (msgIdx + 1) % loadingMsgs.length;
-    document.getElementById('loadingStatus').textContent = loadingMsgs[msgIdx];
-  }, 1500);
-
-  const prompt = buildPrompt();
-
-  try {
-    let text = '';
-
-    if (state.apiType === 'gemini') {
-      // GEMINI API
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 4000 }
-        })
-      });
-
-      clearInterval(msgTimer);
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || 'Gemini API hatası');
-      }
-      const data = await response.json();
-      text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    } else {
-      // CLAUDE API
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': state.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4000,
-          messages: [{ role: 'user', content: prompt }]
-        })
-      });
-
-      clearInterval(msgTimer);
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || 'Claude API hatası');
-      }
-      const data = await response.json();
-      text = data.content.map(c => c.text || '').join('');
-    }
-
-    // Parse JSON
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Geçersiz AI yanıtı');
-
-    const result = JSON.parse(jsonMatch[0]);
-    state.results = result;
-
-    clearInterval(msgTimer);
-    document.getElementById('loadingSection').classList.remove('show');
-    renderResults(result);
-
-  } catch (err) {
-    clearInterval(msgTimer);
-    document.getElementById('loadingSection').classList.remove('show');
-    document.getElementById('formSection').style.display = 'block';
-    const errBox = document.getElementById('errorBox');
-    errBox.classList.add('show');
-    errBox.textContent = '❌ Hata: ' + err.message + ' — API key\'ini kontrol et.';
-  }
+  const msgs=['Parçalar seçiliyor...','Sistem kombinasyonları hazırlanıyor...','Akakce\'den fiyatlar çekiliyor...','Sistemler derleniyor...'];
+  let i=0;const t=setInterval(()=>{i=(i+1)%msgs.length;document.getElementById('loadingStatus').textContent=msgs[i];},900);
+  setTimeout(()=>{clearInterval(t);document.getElementById('loadingSection').classList.remove('show');renderAll();fetchPrices();},1800);
 }
 
-function buildPrompt() {
-  return `Sen bir PC donanım uzmanısın. Kullanıcı için ${state.ddr.toUpperCase()} RAM kullanan 3 farklı segmentte PC sistemi önereceksin.
-
-Kullanıcı tercihleri:
-- RAM Nesli: ${state.ddr.toUpperCase()}
-- Çözünürlük: ${state.resolution}
-- Hedef FPS: ${state.targetFPS}fps
-- Oyunlar: ${state.games.join(', ')}
-
-SADECE JSON formatında yanıt ver, başka hiçbir şey yazma:
-
-{
-  "ddr": "${state.ddr}",
-  "resolution": "${state.resolution}",
-  "targetFPS": "${state.targetFPS}",
-  "aiComment": "Kısa genel yorum (2-3 cümle, Türkçe)",
-  "systems": {
-    "budget": {
-      "name": "Bütçe Sistem",
-      "totalPrice": 12000,
-      "parts": {
-        "cpu": {"name": "Intel Core i5-12400F", "spec": "6 Çekirdek, 2.5-4.4GHz", "price": 2500, "akakceQuery": "i5-12400f"},
-        "motherboard": {"name": "Gigabyte H610M S2H", "spec": "LGA1700, mATX, DDR4", "price": 1800, "akakceQuery": "H610M anakart"},
-        "ram": {"name": "Kingston 16GB DDR4 3200MHz", "spec": "16GB, 3200MHz, CL22", "price": 1200, "akakceQuery": "16gb ddr4 3200mhz ram"},
-        "gpu": {"name": "Sapphire RX 6500 XT 4GB", "spec": "4GB GDDR6, 64-bit", "price": 4500, "akakceQuery": "rx 6500 xt"},
-        "ssd": {"name": "Kingston NV2 500GB NVMe", "spec": "M.2 NVMe Gen3, 3500MB/s", "price": 800, "akakceQuery": "500gb nvme ssd"},
-        "psu": {"name": "Corsair CV550 550W", "spec": "550W, 80+ Bronze", "price": 900, "akakceQuery": "550w 80+ bronze psu"},
-        "case": {"name": "DeepCool CC560", "spec": "Mid Tower ATX", "price": 800, "akakceQuery": "mid tower kasa"}
-      },
-      "fps": {"Valorant": 160, "CS2": 145, "GTA V": 70, "Fortnite": 95}
-    },
-    "mid": {
-      "name": "Orta Segment",
-      "totalPrice": 20000,
-      "parts": {
-        "cpu": {"name": "Intel Core i5-12400F", "spec": "6 Çekirdek, 2.5-4.4GHz", "price": 2500, "akakceQuery": "i5-12400f"},
-        "motherboard": {"name": "MSI PRO B660M-A", "spec": "LGA1700, ATX, DDR4", "price": 2200, "akakceQuery": "B660 anakart ddr4"},
-        "ram": {"name": "G.Skill Ripjaws 16GB DDR4 3600", "spec": "16GB, 3600MHz, CL18", "price": 1500, "akakceQuery": "16gb ddr4 3600mhz ram"},
-        "gpu": {"name": "Sapphire RX 6600 8GB", "spec": "8GB GDDR6, 128-bit", "price": 7000, "akakceQuery": "rx 6600 8gb"},
-        "ssd": {"name": "WD Black SN770 1TB", "spec": "M.2 NVMe Gen4, 5150MB/s", "price": 1500, "akakceQuery": "1tb nvme gen4 ssd"},
-        "psu": {"name": "Seasonic Focus GX-650", "spec": "650W, 80+ Gold", "price": 1800, "akakceQuery": "650w 80+ gold psu"},
-        "case": {"name": "Fractal Design Pop Air", "spec": "Mid Tower ATX, Mesh", "price": 1500, "akakceQuery": "mid tower mesh kasa"}
-      },
-      "fps": {"Valorant": 220, "CS2": 200, "GTA V": 100, "Fortnite": 140}
-    },
-    "high": {
-      "name": "Üst Segment",
-      "totalPrice": 35000,
-      "parts": {
-        "cpu": {"name": "Intel Core i7-12700F", "spec": "12 Çekirdek, 2.1-4.9GHz", "price": 5500, "akakceQuery": "i7-12700f"},
-        "motherboard": {"name": "ASUS PRIME Z690-P", "spec": "LGA1700, ATX, DDR4", "price": 3500, "akakceQuery": "Z690 anakart ddr4"},
-        "ram": {"name": "Corsair Vengeance 32GB DDR4 3600", "spec": "32GB, 3600MHz, CL18", "price": 2500, "akakceQuery": "32gb ddr4 3600mhz ram"},
-        "gpu": {"name": "MSI RTX 3070 8GB", "spec": "8GB GDDR6, 256-bit", "price": 14000, "akakceQuery": "rtx 3070 8gb"},
-        "ssd": {"name": "Samsung 980 Pro 1TB", "spec": "M.2 NVMe Gen4, 7000MB/s", "price": 2500, "akakceQuery": "samsung 980 pro 1tb"},
-        "psu": {"name": "be quiet! Pure Power 11 750W", "spec": "750W, 80+ Gold", "price": 2500, "akakceQuery": "750w 80+ gold psu"},
-        "case": {"name": "NZXT H510 Flow", "spec": "Mid Tower ATX, Mesh", "price": 2500, "akakceQuery": "nzxt h510 kasa"}
-      },
-      "fps": {"Valorant": 300, "CS2": 280, "GTA V": 140, "Fortnite": 190}
-    }
-  }
-}
-
-ÖNEMLİ KURALLAR:
-1. ${state.ddr.toUpperCase()} ile uyumlu GERÇEK parçalar öner
-2. Fiyatlar Türkiye 2024 piyasasına uygun TL olsun (güncel tahmin)
-3. Kullanıcının seçtiği oyunlar için FPS değerleri ${state.resolution} çözünürlükte realistic olsun
-4. Sadece JSON döndür, açıklama ekleme
-5. fps objesinde sadece kullanıcının seçtiği şu oyunları göster: ${state.games.join(', ')}
-6. totalPrice tüm parçaların toplamı olsun`;
-}
-
-// ===== RENDER RESULTS =====
-function renderResults(data) {
+function renderAll(){
   document.getElementById('resultsSection').classList.add('show');
-
-  const segments = ['budget', 'mid', 'high'];
-  segments.forEach(seg => {
-    const sys = data.systems[seg];
-    if (!sys) return;
-
-    // Update price in tab
-    document.getElementById('price' + seg).textContent = formatPrice(sys.totalPrice);
-
-    // Render card
-    renderSystemCard(seg, sys, data.ddr);
-  });
-
-  // FPS table
-  renderFPSTable(data);
-
-  // AI comment
-  if (data.aiComment) {
-    document.getElementById('aiComment').style.display = 'block';
-    document.getElementById('aiCommentText').textContent = data.aiComment;
-  }
-
-  // Show first segment
-  showSegment('budget', document.querySelector('.seg-tab.budget'));
-
-  // Scroll to results
-  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+  ['budget','mid','high'].forEach(seg=>renderCard(seg));
+  renderFPS();
+  showSeg('budget',document.querySelector('.seg-tab.budget'));
+  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
 }
 
-const PART_ICONS = {
-  cpu: '⚙️', motherboard: '🏠', ram: '🧠', gpu: '🎮',
-  ssd: '💾', psu: '⚡', case: '📦', cooler: '🌡️'
-};
+const SC={budget:'var(--budget)',mid:'var(--mid)',high:'var(--high)'};
+const DC={ddr3:'var(--ddr3)',ddr4:'var(--ddr4)',ddr5:'var(--ddr5)'};
 
-const PART_LABELS = {
-  cpu: 'İŞLEMCİ', motherboard: 'ANAKART', ram: 'RAM',
-  gpu: 'EKRAN KARTI', ssd: 'SSD', psu: 'GÜÇ KAYNAĞI',
-  case: 'KASA', cooler: 'SOĞUTUCU'
-};
-
-const SEG_COLORS = { budget: 'var(--budget)', mid: 'var(--mid)', high: 'var(--high)' };
-const DDR_COLORS = { ddr3: 'var(--ddr3)', ddr4: 'var(--ddr4)', ddr5: 'var(--ddr5)' };
-
-function renderSystemCard(seg, sys, ddr) {
-  const card = document.getElementById('card-' + seg);
-  const ddrColor = DDR_COLORS[ddr] || 'var(--accent)';
-  const segColor = SEG_COLORS[seg];
-
-  const partsHTML = Object.entries(sys.parts).map(([key, part]) => `
-    <div class="part-row">
-      <div class="part-left">
-        <div class="part-icon">${PART_ICONS[key] || '🔧'}</div>
-        <div class="part-info">
-          <div class="part-type">${PART_LABELS[key] || key.toUpperCase()}</div>
-          <div class="part-name">${part.name}</div>
-          <div class="part-spec">${part.spec}</div>
-        </div>
-      </div>
-      <div class="part-right">
-        <div class="part-price">${formatPrice(part.price)}</div>
-        <a class="part-link" href="https://www.akakce.com/arama/?q=${encodeURIComponent(part.akakceQuery)}" target="_blank">Akakce →</a>
-      </div>
-    </div>
-  `).join('');
-
-  card.innerHTML = `
+function renderCard(seg){
+  const sys=DB[S.ddr][seg];
+  const card=document.getElementById('card-'+seg);
+  card.innerHTML=`
     <div class="system-card-header">
-      <div class="system-card-title" style="color:${segColor}">${sys.name}</div>
-      <span class="ddr-tag" style="background:${ddrColor}22;color:${ddrColor};border:1px solid ${ddrColor}44">${ddr.toUpperCase()}</span>
+      <div class="system-card-title" style="color:${SC[seg]}">${sys.name}</div>
+      <span class="ddr-tag" style="background:${DC[S.ddr]}22;color:${DC[S.ddr]};border:1px solid ${DC[S.ddr]}44">${S.ddr.toUpperCase()}</span>
     </div>
-    <div class="parts-list">${partsHTML}</div>
+    <div class="parts-list">${Object.entries(sys.parts).map(([k,p])=>`
+      <div class="part-row">
+        <div class="part-left">
+          <div class="part-icon">${p.i}</div>
+          <div class="part-info"><div class="part-type">${p.t}</div><div class="part-name">${p.n}</div><div class="part-spec">${p.s}</div></div>
+        </div>
+        <div class="part-right">
+          <div class="part-price loading" id="pp_${seg}_${k}">⏳</div>
+          <a class="part-link" href="https://www.akakce.com/arama/?q=${encodeURIComponent(p.q)}" target="_blank">Akakce →</a>
+        </div>
+      </div>`).join('')}
+    </div>
     <div class="total-bar">
-      <div>
-        <div class="total-label">Tahmini Toplam</div>
-        <div class="total-price">${formatPrice(sys.totalPrice)}</div>
-      </div>
-      <button class="cart-btn" onclick="addSystemToCart('${seg}')">🛒 Sepete Ekle</button>
-    </div>
-  `;
+      <div><div class="total-label">Tahmini Toplam</div><div class="total-price" id="tot_${seg}">⏳ Hesaplanıyor...</div></div>
+      <button class="cart-btn" onclick="addCart('${seg}')">🛒 Sepete Ekle</button>
+    </div>`;
 }
 
-function renderFPSTable(data) {
-  const allGames = new Set();
-  Object.values(data.systems).forEach(sys => {
-    if (sys.fps) Object.keys(sys.fps).forEach(g => allGames.add(g));
-  });
+function renderFPS(){
+  const fpsd=FPS[S.ddr];
+  const rows=S.games.map(g=>{
+    const d=fpsd[g];if(!d)return'';
+    const bar=(v,c)=>v?`<div class="fps-bar-wrap"><div class="fps-bar ${c}" style="width:${Math.min(Math.round(v/5),80)}px"></div><span class="fps-val ${c}">${v}fps</span></div>`:'<span style="color:var(--text3)">—</span>';
+    return`<tr><td style="color:var(--text)">${g}</td><td>${bar(d.b,'budget')}</td><td>${bar(d.m,'mid')}</td><td>${bar(d.h,'high')}</td></tr>`;
+  }).filter(Boolean).join('');
+  document.getElementById('fpsBody').innerHTML=rows||'<tr><td colspan="4" style="color:var(--text3);text-align:center;padding:16px">Seçilen oyunlar için FPS verisi yok</td></tr>';
+}
 
-  if (allGames.size === 0) {
-    document.getElementById('fpsSection').style.display = 'none';
-    return;
+function showSeg(seg,el){
+  document.querySelectorAll('.seg-tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.system-card').forEach(c=>c.classList.remove('show'));
+  document.getElementById('card-'+seg).classList.add('show');
+  S.active=seg;
+}
+
+// ===== AKAKCE FİYAT ÇEKME =====
+async function fetchPrices(){
+  const segs=['budget','mid','high'];
+  const parts=[];
+  segs.forEach(seg=>Object.entries(DB[S.ddr][seg].parts).forEach(([k,p])=>parts.push({seg,k,q:p.q})));
+  
+  let done=0;
+  document.getElementById('priceStatusText').textContent=`Akakce'den fiyatlar çekiliyor (0/${parts.length})...`;
+
+  for(const{seg,k,q}of parts){
+    const price=await getPrice(q);
+    const id=`pp_${seg}_${k}`;
+    const el=document.getElementById(id);
+    if(el){
+      if(price){
+        el.textContent='₺'+price.toLocaleString('tr-TR');
+        el.className='part-price loaded';
+        S.prices[`${seg}_${k}`]=price;
+      } else {
+        el.textContent='Akakce\'de Gör';
+        el.className='part-price notfound';
+      }
+    }
+    updateTot(seg);
+    done++;
+    document.getElementById('priceStatusText').textContent=`Akakce'den fiyatlar çekiliyor (${done}/${parts.length})...`;
+    await wait(400);
   }
 
-  const maxFPS = 400;
-
-  const rows = [...allGames].map(game => {
-    const b = data.systems.budget?.fps?.[game] || '—';
-    const m = data.systems.mid?.fps?.[game] || '—';
-    const h = data.systems.high?.fps?.[game] || '—';
-
-    const bW = b !== '—' ? Math.round((b / maxFPS) * 80) : 0;
-    const mW = m !== '—' ? Math.round((m / maxFPS) * 80) : 0;
-    const hW = h !== '—' ? Math.round((h / maxFPS) * 80) : 0;
-
-    return `
-      <tr>
-        <td>${game}</td>
-        <td>
-          <div class="fps-bar-wrap">
-            <div class="fps-bar budget" style="width:${bW}px"></div>
-            <span class="fps-val budget">${b !== '—' ? b + 'fps' : '—'}</span>
-          </div>
-        </td>
-        <td>
-          <div class="fps-bar-wrap">
-            <div class="fps-bar mid" style="width:${mW}px"></div>
-            <span class="fps-val mid">${m !== '—' ? m + 'fps' : '—'}</span>
-          </div>
-        </td>
-        <td>
-          <div class="fps-bar-wrap">
-            <div class="fps-bar high" style="width:${hW}px"></div>
-            <span class="fps-val high">${h !== '—' ? h + 'fps' : '—'}</span>
-          </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
-
-  document.getElementById('fpsBody').innerHTML = rows;
+  document.getElementById('priceDot').style.animation='none';
+  document.getElementById('priceDot').style.background='var(--green)';
+  document.getElementById('priceStatusText').textContent='✅ Tüm fiyatlar Akakce\'den güncellendi!';
 }
 
-// ===== SEGMENT TABS =====
-function showSegment(seg, el) {
-  document.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
-  if (el) el.classList.add('active');
-
-  document.querySelectorAll('.system-card').forEach(c => c.classList.remove('show'));
-  const card = document.getElementById('card-' + seg);
-  if (card) card.classList.add('show');
-
-  state.activeSegment = seg;
+async function getPrice(q){
+  try{
+    const url=`https://www.akakce.com/arama/?q=${encodeURIComponent(q)}`;
+    const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const r=await fetch(proxy,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok)return null;
+    const d=await r.json();
+    const html=d.contents||'';
+    // Akakce fiyat çekme - birden fazla pattern dene
+    const patterns=[
+      /class="pt_v8_v"[^>]*>([0-9.,]+)\s*TL/g,
+      /"price"[^>]*>([0-9.,]+)/g,
+      /([0-9]{3,6}(?:[.,][0-9]{3})*(?:[.,][0-9]{2})?)\s*(?:TL|₺)/g
+    ];
+    const prices=[];
+    for(const pat of patterns){
+      const matches=[...html.matchAll(pat)];
+      matches.forEach(m=>{
+        const v=parseFloat(m[1].replace(/\./g,'').replace(',','.'));
+        if(!isNaN(v)&&v>200&&v<150000)prices.push(v);
+      });
+      if(prices.length>0)break;
+    }
+    prices.sort((a,b)=>a-b);
+    return prices.length>0?prices[0]:null;
+  }catch(e){return null;}
 }
+
+function updateTot(seg){
+  const parts=DB[S.ddr][seg].parts;
+  let tot=0,cnt=0;
+  Object.keys(parts).forEach(k=>{const p=S.prices[`${seg}_${k}`];if(p){tot+=p;cnt++;}});
+  if(cnt>0){
+    const el=document.getElementById('tot_'+seg);
+    if(el)el.textContent='₺'+tot.toLocaleString('tr-TR')+(cnt<Object.keys(parts).length?' (kısmi)':'');
+    document.getElementById('price'+seg).textContent='₺'+tot.toLocaleString('tr-TR');
+  }
+}
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 
 // ===== CART =====
-function addSystemToCart(seg) {
-  if (!state.results) return;
-  const sys = state.results.systems[seg];
-  if (!sys) return;
-
-  // Clear cart and add new system
-  state.cart = [];
-  Object.entries(sys.parts).forEach(([key, part]) => {
-    state.cart.push({
-      id: key + '_' + seg,
-      type: PART_LABELS[key] || key,
-      name: part.name,
-      price: part.price,
-      query: part.akakceQuery
-    });
-  });
-
-  saveCart();
-  renderCart();
-  openCart();
+function addCart(seg){
+  const sys=DB[S.ddr][seg];
+  S.cart=Object.entries(sys.parts).map(([k,p])=>({id:`${seg}_${k}`,type:p.t,name:p.n,price:S.prices[`${seg}_${k}`]||0,q:p.q}));
+  localStorage.setItem('pc_cart',JSON.stringify(S.cart));
+  renderCart();openCart();
 }
 
-function removeFromCart(id) {
-  state.cart = state.cart.filter(i => i.id !== id);
-  saveCart();
-  renderCart();
+function removeCart(id){S.cart=S.cart.filter(i=>i.id!==id);localStorage.setItem('pc_cart',JSON.stringify(S.cart));renderCart();}
+
+function renderCart(){
+  const tot=S.cart.reduce((s,i)=>s+i.price,0);
+  document.getElementById('cartItems').innerHTML=S.cart.length===0
+    ?'<div style="text-align:center;color:var(--text3);padding:20px;font-size:13px">Sepet boş</div>'
+    :S.cart.map(i=>`<div class="cart-item"><div><div class="cart-item-type">${i.type}</div><div class="cart-item-name">${i.name}</div></div><div class="cart-item-price">${i.price?'₺'+i.price.toLocaleString('tr-TR'):'—'}</div><button class="cart-remove" onclick="removeCart('${i.id}')">✕</button></div>`).join('');
+  document.getElementById('cartTotal').textContent=tot?'₺'+tot.toLocaleString('tr-TR'):'₺0';
+  document.getElementById('cartBadge').textContent=S.cart.length;
+  document.getElementById('cartFab').classList.toggle('show',S.cart.length>0);
 }
 
-function renderCart() {
-  const items = state.cart;
-  const total = items.reduce((s, i) => s + i.price, 0);
+function openCart(){document.getElementById('cartPanel').classList.add('open');document.getElementById('cartBackdrop').classList.add('open');}
+function closeCart(){document.getElementById('cartPanel').classList.remove('open');document.getElementById('cartBackdrop').classList.remove('open');}
+function openLinks(){S.cart.forEach(i=>window.open('https://www.akakce.com/arama/?q='+encodeURIComponent(i.q),'_blank'));}
 
-  document.getElementById('cartItems').innerHTML = items.length === 0
-    ? '<div style="text-align:center;color:var(--text3);padding:20px;font-size:13px;">Sepet boş</div>'
-    : items.map(item => `
-        <div class="cart-item">
-          <div>
-            <div class="cart-item-type">${item.type}</div>
-            <div class="cart-item-name">${item.name}</div>
-          </div>
-          <div class="cart-item-price">${formatPrice(item.price)}</div>
-          <button class="cart-remove" onclick="removeFromCart('${item.id}')">✕</button>
-        </div>
-      `).join('');
-
-  document.getElementById('cartTotal').textContent = formatPrice(total);
-  document.getElementById('cartBadge').textContent = items.length;
-
-  const fab = document.getElementById('cartFab');
-  if (items.length > 0) fab.classList.add('show');
-  else fab.classList.remove('show');
-}
-
-function saveCart() {
-  localStorage.setItem('pcusta_cart', JSON.stringify(state.cart));
-}
-
-function openCart() {
-  document.getElementById('cartPanel').classList.add('open');
-  document.getElementById('cartBackdrop').classList.add('open');
-}
-
-function closeCart() {
-  document.getElementById('cartPanel').classList.remove('open');
-  document.getElementById('cartBackdrop').classList.remove('open');
-}
-
-function openAllLinks() {
-  state.cart.forEach(item => {
-    window.open(`https://www.akakce.com/arama/?q=${encodeURIComponent(item.query)}`, '_blank');
-  });
-}
-
-// ===== RESET =====
-function resetForm() {
-  state.ddr = null;
-  state.resolution = null;
-  state.targetFPS = null;
-  state.games = [];
-  state.results = null;
-
-  document.querySelectorAll('.ddr-btn, .res-btn, .fps-btn').forEach(b => b.classList.remove('selected'));
-  document.querySelectorAll('.game-check').forEach(b => b.classList.remove('checked'));
-
+function reset(){
+  S.ddr=null;S.res=null;S.fps=null;S.games=[];S.prices={};
+  document.querySelectorAll('.ddr-btn,.res-btn,.fps-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.game-check').forEach(b=>b.classList.remove('checked'));
   document.getElementById('resultsSection').classList.remove('show');
-  document.getElementById('formSection').style.display = 'block';
-  document.getElementById('errorBox').classList.remove('show');
-
-  checkReady();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('formSection').style.display='block';
+  chk();window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ===== UTILS =====
-function formatPrice(p) {
-  return '₺' + Number(p).toLocaleString('tr-TR');
-}
-
-// ===== START =====
 init();
 </script>
 </body>
