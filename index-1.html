@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PC Ustası — Akıllı Sistem Toplayıcı</title>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #0f0f1a;
+    --bg3: #141428;
+    --card: #12121f;
+    --border: #1e1e3a;
+    --border2: #2a2a50;
+    --accent: #00d4ff;
+    --accent2: #7b2fff;
+    --accent3: #ff6b35;
+    --green: #00ff88;
+    --yellow: #ffd60a;
+    --red: #ff3860;
+    --text: #e8e8f0;
+    --text2: #8888aa;
+    --text3: #4a4a6a;
+    --ddr3: #ff6b35;
+    --ddr4: #00d4ff;
+    --ddr5: #a855f7;
+    --budget: #00ff88;
+    --mid: #ffd60a;
+    --high: #ff3860;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --glow2: 0 0 30px rgba(123,47,255,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG GRID */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,212,255,0.5);
+  }
+
+  .logo span { color: var(--accent2); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .api-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s;
+  }
+  .api-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .api-btn.active { border-color: var(--green); color: var(--green); }
+
+  /* MAIN */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 16px 100px;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 30px 0 24px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 3px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .hero h1 .line1 { color: var(--text); }
+  .hero h1 .line2 {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    color: var(--text2);
+    font-size: 14px;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* STEPS */
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .step.active { color: var(--accent); }
+  .step.done { color: var(--green); }
+
+  .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .step-arrow { color: var(--text3); font-size: 10px; }
+
+  /* SECTION CARD */
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+
+  .section-card.active { border-color: var(--accent); box-shadow: var(--glow); }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+
+  /* DDR SELECTOR */
+  .ddr-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .ddr-btn {
+    background: var(--bg3);
+    border: 2px solid var(--border2);
+    border-radius: 12px;
+    padding: 14px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ddr-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .ddr-btn.ddr3-btn { --clr: var(--ddr3); }
+  .ddr-btn.ddr4-btn { --clr: var(--ddr4); }
+  .ddr-btn.ddr5-btn { --clr: var(--ddr5); }
+
+  .ddr-btn::before { background: radial-gradient(circle at center, color-mix(in srgb, var(--clr) 15%, transparent), transparent 70%); }
+
+  .ddr-btn:hover::before, .ddr-btn.selected::before { opacity: 1; }
+  .ddr-btn:hover, .ddr-btn.selected { border-color: var(--clr); }
+
+  .ddr-badge {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--clr);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .ddr-label {
+    font-size: 10px;
+    color: var(--text2);
+    display: block;
+    line-height: 1.4;
+  }
+
+  .ddr-price {
+    font-size: 11px;
+    color: var(--clr);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 6px;
+    display: block;
+    opacity: 0.8;
+  }
+
+  /* RESOLUTION */
+  .res-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .res-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .res-btn:hover, .res-btn.selected {
+    border-color: var(--accent2);
+    background: rgba(123,47,255,0.1);
+  }
+
+  .res-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent2);
+    display: block;
+  }
+
+  .res-desc { font-size: 10px; color: var(--text2); }
+
+  /* FPS TARGET */
+  .fps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .fps-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 10px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .fps-btn:hover, .fps-btn.selected {
+    border-color: var(--green);
+    background: rgba(0,255,136,0.08);
+  }
+
+  .fps-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+  }
+
+  .fps-desc { font-size: 10px; color: var(--text2); }
+
+  /* GAMES */
+  .game-categories { display: flex; flex-direction: column; gap: 14px; }
+
+  .game-cat-title {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .game-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .game-check:hover { border-color: var(--border2); }
+  .game-check.checked { border-color: var(--accent2); background: rgba(123,47,255,0.1); }
+
+  .game-checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-size: 10px;
+  }
+
+  .game-check.checked .game-checkbox {
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
+
+  .game-name { font-size: 12px; color: var(--text2); }
+  .game-check.checked .game-name { color: var(--text); }
+
+  /* BUILD BUTTON */
+  .build-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .build-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  }
+
+  .build-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(123,47,255,0.4); }
+  .build-btn:active { transform: translateY(0); }
+  .build-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* API KEY MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 420px;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .modal-desc {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .modal-desc a { color: var(--accent); text-decoration: none; }
+
+  .modal-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 12px;
+  }
+
+  .modal-input:focus { border-color: var(--accent); }
+
+  .modal-save {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: var(--bg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-save:hover { background: #00b8e0; }
+
+  .modal-warning {
+    background: rgba(255,56,96,0.1);
+    border: 1px solid rgba(255,56,96,0.3);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: #ff8080;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* LOADING */
+  .loading-section {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .loading-section.show { display: block; }
+
+  .loader {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--border2);
+    border-top-color: var(--accent);
+    border-right-color: var(--accent2);
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+
+  .loading-sub {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* RESULTS */
+  .results-section { display: none; }
+  .results-section.show { display: block; }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .results-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .reset-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* SYSTEM TABS */
+  .segment-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .seg-tab {
+    background: var(--bg3);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .seg-tab.budget { --clr: var(--budget); }
+  .seg-tab.mid { --clr: var(--mid); }
+  .seg-tab.high { --clr: var(--high); }
+
+  .seg-tab:hover, .seg-tab.active {
+    border-color: var(--clr);
+    background: color-mix(in srgb, var(--clr) 8%, var(--bg3));
+  }
+
+  .seg-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+  .seg-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--clr);
+    display: block;
+  }
+
+  .seg-price {
+    font-size: 11px;
+    color: var(--text2);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* SYSTEM CARD */
+  .system-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .system-card.show { display: block; }
+
+  .system-card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .system-card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .ddr-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* PARTS LIST */
+  .parts-list { padding: 16px 20px; }
+
+  .part-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .part-row:last-child { border-bottom: none; }
+
+  .part-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .part-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+  }
+
+  .part-info { flex: 1; min-width: 0; }
+
+  .part-type {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .part-name {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .part-spec {
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  .part-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .part-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .part-link {
+    font-size: 10px;
+    color: var(--text3);
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .part-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TOTAL */
+  .total-bar {
+    padding: 16px 20px;
+    background: var(--bg3);
+    border-top: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .total-label {
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .total-price {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .cart-btn {
+    background: var(--green);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: var(--bg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .cart-btn:hover { background: #00e07a; transform: translateY(-1px); }
+
+  /* FPS TABLE */
+  .fps-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  .fps-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .fps-table { width: 100%; border-collapse: collapse; }
+
+  .fps-table th {
+    padding: 10px 16px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text3);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 1px;
+  }
+
+  .fps-table td {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fps-table tr:last-child td { border-bottom: none; }
+
+  .fps-table td:first-child { color: var(--text); }
+
+  .fps-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .fps-val.budget { color: var(--budget); }
+  .fps-val.mid { color: var(--mid); }
+  .fps-val.high { color: var(--high); }
+
+  .fps-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .fps-bar {
+    height: 4px;
+    border-radius: 2px;
+    min-width: 20px;
+    transition: width 0.5s ease;
+  }
+
+  .fps-bar.budget { background: var(--budget); }
+  .fps-bar.mid { background: var(--mid); }
+  .fps-bar.high { background: var(--high); }
+
+  /* CART PANEL */
+  .cart-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .cart-panel.open { transform: translateY(0); }
+
+  .cart-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 149;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .cart-backdrop.open { opacity: 1; pointer-events: all; }
+
+  .cart-inner {
+    background: var(--bg2);
+    border-top: 1px solid var(--border2);
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cart-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border2);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  .cart-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .cart-item-name { font-size: 13px; color: var(--text); flex: 1; }
+  .cart-item-type { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+
+  .cart-item-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .cart-remove {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+
+  .cart-remove:hover { color: var(--red); }
+
+  .cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0 8px;
+    border-top: 1px solid var(--border2);
+    margin-top: 8px;
+  }
+
+  .cart-total-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    color: var(--text2);
+  }
+
+  .cart-total-price {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .cart-links-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .cart-links-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* CART FAB */
+  .cart-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    z-index: 140;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(123,47,255,0.4);
+    transition: transform 0.2s;
+    display: none;
+  }
+
+  .cart-fab.show { display: flex; }
+  .cart-fab:hover { transform: scale(1.1); }
+
+  .cart-fab-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* AI COMMENT */
+  .ai-comment {
+    background: rgba(123,47,255,0.08);
+    border: 1px solid rgba(123,47,255,0.2);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .ai-comment-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent2);
+    letter-spacing: 1px;
+  }
+
+  /* ERROR */
+  .error-box {
+    background: rgba(255,56,96,0.1);
+    border: 1px solid rgba(255,56,96,0.3);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    color: #ff8080;
+    font-size: 13px;
+    display: none;
+  }
+
+  .error-box.show { display: block; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in { animation: fadeUp 0.4s ease forwards; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* RESPONSIVE */
+  @media (min-width: 600px) {
+    .game-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">PC<span>USTA</span></div>
+  <div class="header-right">
+    <button class="api-btn" id="apiBtn" onclick="openModal()">🔑 API KEY</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">⚡ AI Destekli Sistem Toplayıcı</div>
+    <h1>
+      <span class="line1">Sana Özel</span><br>
+      <span class="line2">PC Sistemi Kur</span>
+    </h1>
+    <p>DDR neslini seç, oyunlarını işaretle — AI en iyi 3 segmenti senin için toplayıp fiyatlarını göstersin.</p>
+  </div>
+
+  <!-- FORM SECTION -->
+  <div id="formSection">
+
+    <!-- DDR SEÇİMİ -->
+    <div class="section-card active">
+      <div class="section-title">
+        <div class="icon">🧠</div>
+        RAM Nesli Seç
+      </div>
+      <div class="ddr-selector">
+        <div class="ddr-btn ddr3-btn" onclick="selectDDR('ddr3', this)">
+          <span class="ddr-badge">DDR3</span>
+          <span class="ddr-label">Eski nesil<br>ikinci el</span>
+          <span class="ddr-price">~3K–12K ₺</span>
+        </div>
+        <div class="ddr-btn ddr4-btn" onclick="selectDDR('ddr4', this)">
+          <span class="ddr-badge">DDR4</span>
+          <span class="ddr-label">En yaygın<br>fiyat/perf</span>
+          <span class="ddr-price">~10K–30K ₺</span>
+        </div>
+        <div class="ddr-btn ddr5-btn" onclick="selectDDR('ddr5', this)">
+          <span class="ddr-badge">DDR5</span>
+          <span class="ddr-label">Yeni nesil<br>gelecek</span>
+          <span class="ddr-price">~18K–50K ₺</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÇÖZÜNÜRLÜK -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon">🖥️</div>
+        Monitör Çözünürlüğü
+      </div>
+      <div class="res-grid">
+        <div class="res-btn" onclick="selectRes('1080p', this)">
+          <span class="res-name">1080p</span>
+          <span class="res-desc">Full HD</span>
+        </div>
+        <div class="res-btn" onclick="selectRes('1440p', this)">
+          <span class="res-name">1440p</span>
+          <span class="res-desc">2K / QHD</span>
+        </div>
+        <div class="res-btn" onclick="selectRes('4K', this)">
+          <span class="res-name">4K</span>
+          <span class="res-desc">Ultra HD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEDEF FPS -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon">🎯</div>
+        Hedef FPS
+      </div>
+      <div class="fps-grid">
+        <div class="fps-btn" onclick="selectFPS('60', this)">
+          <span class="fps-num">60fps</span>
+          <span class="fps-desc">Standart</span>
+        </div>
+        <div class="fps-btn" onclick="selectFPS('144', this)">
+          <span class="fps-num">144fps</span>
+          <span class="fps-desc">Akıcı</span>
+        </div>
+        <div class="fps-btn" onclick="selectFPS('240', this)">
+          <span class="fps-num">240fps+</span>
+          <span class="fps-desc">Rekabetçi</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OYUNLAR -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon">🎮</div>
+        Oyunlarını Seç
+      </div>
+      <div class="game-categories">
+
+        <div>
+          <div class="game-cat-title">// FPS & Aksiyon</div>
+          <div class="game-grid" id="catFPS"></div>
+        </div>
+
+        <div>
+          <div class="game-cat-title">// Açık Dünya & RPG</div>
+          <div class="game-grid" id="catRPG"></div>
+        </div>
+
+        <div>
+          <div class="game-cat-title">// Spor & Yarış</div>
+          <div class="game-grid" id="catSport"></div>
+        </div>
+
+        <div>
+          <div class="game-cat-title">// MOBA & Strateji</div>
+          <div class="game-grid" id="catMOBA"></div>
+        </div>
+
+        <div>
+          <div class="game-cat-title">// Simülasyon</div>
+          <div class="game-grid" id="catSim"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BUILD BUTTON -->
+    <button class="build-btn" id="buildBtn" onclick="buildSystems()" disabled>
+      🤖 AI İLE SİSTEM TOPLA
+    </button>
+
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-section" id="loadingSection">
+    <div class="loader"></div>
+    <div class="loading-text">AI Sistemleri Hesaplıyor...</div>
+    <div class="loading-sub" id="loadingStatus">Parçalar analiz ediliyor...</div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title">🖥️ Önerilen Sistemler</div>
+      <button class="reset-btn" onclick="resetForm()">↺ Yeniden</button>
+    </div>
+
+    <!-- SEGMENT TABS -->
+    <div class="segment-tabs">
+      <div class="seg-tab budget active" onclick="showSegment('budget', this)">
+        <span class="seg-icon">💚</span>
+        <span class="seg-name">BÜTÇE</span>
+        <span class="seg-price" id="pricebudget">—</span>
+      </div>
+      <div class="seg-tab mid" onclick="showSegment('mid', this)">
+        <span class="seg-icon">💛</span>
+        <span class="seg-name">ORTA</span>
+        <span class="seg-price" id="pricemid">—</span>
+      </div>
+      <div class="seg-tab high" onclick="showSegment('high', this)">
+        <span class="seg-icon">🔴</span>
+        <span class="seg-name">ÜST</span>
+        <span class="seg-price" id="pricehigh">—</span>
+      </div>
+    </div>
+
+    <!-- SYSTEM CARDS -->
+    <div class="system-card show" id="card-budget"></div>
+    <div class="system-card" id="card-mid"></div>
+    <div class="system-card" id="card-high"></div>
+
+    <!-- FPS TABLE -->
+    <div class="fps-section" id="fpsSection">
+      <div class="fps-header">🎮 FPS Karşılaştırması</div>
+      <div style="overflow-x:auto;">
+        <table class="fps-table" id="fpsTable">
+          <thead>
+            <tr>
+              <th>OYUN</th>
+              <th>💚 BÜTÇE</th>
+              <th>💛 ORTA</th>
+              <th>🔴 ÜST</th>
+            </tr>
+          </thead>
+          <tbody id="fpsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- AI COMMENT -->
+    <div class="ai-comment" id="aiComment" style="display:none">
+      <div class="ai-comment-header">🤖 AI YORUMU</div>
+      <div id="aiCommentText"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- CART FAB -->
+<button class="cart-fab" id="cartFab" onclick="openCart()">
+  🛒
+  <span class="cart-fab-badge" id="cartBadge">0</span>
+</button>
+
+<!-- CART BACKDROP -->
+<div class="cart-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-inner">
+    <div class="cart-handle"></div>
+    <div class="cart-title">🛒 Sepetim</div>
+    <div id="cartItems"></div>
+    <div class="cart-total-row">
+      <div class="cart-total-label">Toplam</div>
+      <div class="cart-total-price" id="cartTotal">₺0</div>
+    </div>
+    <button class="cart-links-btn" onclick="openAllLinks()">🔗 Tüm Linkleri Aç (Akakce)</button>
+  </div>
+</div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">🔑 Claude API Key</div>
+    <div class="modal-desc">
+      API key'ini <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> adresinden alabilirsin. Key sadece cihazında saklanır, hiçbir yere gönderilmez.
+    </div>
+    <input type="password" class="modal-input" id="apiKeyInput" placeholder="sk-ant-api03-..." />
+    <button class="modal-save" onclick="saveApiKey()">Kaydet</button>
+    <div class="modal-warning">
+      ⚠️ API key'ini kimseyle paylaşma. Bu uygulama key'ini sadece tarayıcında (localStorage) saklar.
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let state = {
+  ddr: null,
+  resolution: null,
+  targetFPS: null,
+  games: [],
+  apiKey: localStorage.getItem('pcusta_key') || null,
+  results: null,
+  cart: JSON.parse(localStorage.getItem('pcusta_cart') || '[]'),
+  activeSegment: 'budget'
+};
+
+// ===== GAMES DATA =====
+const GAMES = {
+  fps: ['Valorant','CS2','Apex Legends','Fortnite','COD Warzone','Overwatch 2','PUBG','Rainbow Six Siege','Rust','Escape from Tarkov'],
+  rpg: ['GTA V','GTA VI','Cyberpunk 2077','Red Dead Redemption 2','Witcher 3','Elden Ring','AC Valhalla','Hogwarts Legacy','Starfield','Baldur\'s Gate 3'],
+  sport: ['EA FC 25','F1 24','Forza Horizon 5','NFS Unbound','Rocket League','WWE 2K24'],
+  moba: ['League of Legends','DOTA 2','Age of Empires IV','Total War Warhammer'],
+  sim: ['Minecraft','The Sims 4','Euro Truck Simulator 2','Microsoft Flight Simulator','Cities Skylines 2']
+};
+
+// ===== INIT =====
+function init() {
+  renderGames();
+  updateApiBtn();
+  renderCart();
+}
+
+function renderGames() {
+  Object.entries(GAMES).forEach(([cat, games]) => {
+    const catMap = { fps:'catFPS', rpg:'catRPG', sport:'catSport', moba:'catMOBA', sim:'catSim' };
+    const el = document.getElementById(catMap[cat]);
+    el.innerHTML = games.map(g => `
+      <div class="game-check" onclick="toggleGame('${g}', this)">
+        <div class="game-checkbox">✓</div>
+        <span class="game-name">${g}</span>
+      </div>
+    `).join('');
+  });
+}
+
+// ===== SELECTORS =====
+function selectDDR(val, el) {
+  document.querySelectorAll('.ddr-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.ddr = val;
+  checkReady();
+}
+
+function selectRes(val, el) {
+  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.resolution = val;
+  checkReady();
+}
+
+function selectFPS(val, el) {
+  document.querySelectorAll('.fps-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.targetFPS = val;
+  checkReady();
+}
+
+function toggleGame(name, el) {
+  el.classList.toggle('checked');
+  if (el.classList.contains('checked')) {
+    if (!state.games.includes(name)) state.games.push(name);
+  } else {
+    state.games = state.games.filter(g => g !== name);
+  }
+  checkReady();
+}
+
+function checkReady() {
+  const btn = document.getElementById('buildBtn');
+  const ready = state.ddr && state.resolution && state.targetFPS && state.games.length > 0 && state.apiKey;
+  btn.disabled = !ready;
+  if (!state.apiKey) btn.textContent = '🔑 Önce API Key Gir';
+  else if (!state.ddr || !state.resolution || !state.targetFPS) btn.textContent = '⚙️ Seçimleri Tamamla';
+  else if (state.games.length === 0) btn.textContent = '🎮 Oyun Seç';
+  else btn.textContent = '🤖 AI İLE SİSTEM TOPLA';
+}
+
+// ===== API KEY =====
+function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-ant')) {
+    alert('Geçersiz API key formatı!');
+    return;
+  }
+  state.apiKey = key;
+  localStorage.setItem('pcusta_key', key);
+  updateApiBtn();
+  closeModal();
+  checkReady();
+}
+
+function updateApiBtn() {
+  const btn = document.getElementById('apiBtn');
+  if (state.apiKey) {
+    btn.textContent = '✅ API HAZIR';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = '🔑 API KEY';
+    btn.classList.remove('active');
+  }
+}
+
+// ===== BUILD =====
+async function buildSystems() {
+  if (!state.apiKey) { openModal(); return; }
+
+  // Show loading
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('loadingSection').classList.add('show');
+  document.getElementById('errorBox').classList.remove('show');
+
+  const loadingMsgs = [
+    'Parçalar analiz ediliyor...',
+    'Fiyat/performans hesaplanıyor...',
+    'FPS değerleri belirleniyor...',
+    'Sistemler derleniyor...'
+  ];
+  let msgIdx = 0;
+  const msgTimer = setInterval(() => {
+    msgIdx = (msgIdx + 1) % loadingMsgs.length;
+    document.getElementById('loadingStatus').textContent = loadingMsgs[msgIdx];
+  }, 1500);
+
+  const prompt = buildPrompt();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': state.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    clearInterval(msgTimer);
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'API hatası');
+    }
+
+    const data = await response.json();
+    const text = data.content.map(c => c.text || '').join('');
+
+    // Parse JSON
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Geçersiz AI yanıtı');
+
+    const result = JSON.parse(jsonMatch[0]);
+    state.results = result;
+
+    clearInterval(msgTimer);
+    document.getElementById('loadingSection').classList.remove('show');
+    renderResults(result);
+
+  } catch (err) {
+    clearInterval(msgTimer);
+    document.getElementById('loadingSection').classList.remove('show');
+    document.getElementById('formSection').style.display = 'block';
+    const errBox = document.getElementById('errorBox');
+    errBox.classList.add('show');
+    errBox.textContent = '❌ Hata: ' + err.message + ' — API key\'ini kontrol et.';
+  }
+}
+
+function buildPrompt() {
+  return `Sen bir PC donanım uzmanısın. Kullanıcı için ${state.ddr.toUpperCase()} RAM kullanan 3 farklı segmentte PC sistemi önereceksin.
+
+Kullanıcı tercihleri:
+- RAM Nesli: ${state.ddr.toUpperCase()}
+- Çözünürlük: ${state.resolution}
+- Hedef FPS: ${state.targetFPS}fps
+- Oyunlar: ${state.games.join(', ')}
+
+SADECE JSON formatında yanıt ver, başka hiçbir şey yazma:
+
+{
+  "ddr": "${state.ddr}",
+  "resolution": "${state.resolution}",
+  "targetFPS": "${state.targetFPS}",
+  "aiComment": "Kısa genel yorum (2-3 cümle, Türkçe)",
+  "systems": {
+    "budget": {
+      "name": "Bütçe Sistem",
+      "totalPrice": 12000,
+      "parts": {
+        "cpu": {"name": "Intel Core i5-12400F", "spec": "6 Çekirdek, 2.5-4.4GHz", "price": 2500, "akakceQuery": "i5-12400f"},
+        "motherboard": {"name": "Gigabyte H610M S2H", "spec": "LGA1700, mATX, DDR4", "price": 1800, "akakceQuery": "H610M anakart"},
+        "ram": {"name": "Kingston 16GB DDR4 3200MHz", "spec": "16GB, 3200MHz, CL22", "price": 1200, "akakceQuery": "16gb ddr4 3200mhz ram"},
+        "gpu": {"name": "Sapphire RX 6500 XT 4GB", "spec": "4GB GDDR6, 64-bit", "price": 4500, "akakceQuery": "rx 6500 xt"},
+        "ssd": {"name": "Kingston NV2 500GB NVMe", "spec": "M.2 NVMe Gen3, 3500MB/s", "price": 800, "akakceQuery": "500gb nvme ssd"},
+        "psu": {"name": "Corsair CV550 550W", "spec": "550W, 80+ Bronze", "price": 900, "akakceQuery": "550w 80+ bronze psu"},
+        "case": {"name": "DeepCool CC560", "spec": "Mid Tower ATX", "price": 800, "akakceQuery": "mid tower kasa"}
+      },
+      "fps": {"Valorant": 160, "CS2": 145, "GTA V": 70, "Fortnite": 95}
+    },
+    "mid": {
+      "name": "Orta Segment",
+      "totalPrice": 20000,
+      "parts": {
+        "cpu": {"name": "Intel Core i5-12400F", "spec": "6 Çekirdek, 2.5-4.4GHz", "price": 2500, "akakceQuery": "i5-12400f"},
+        "motherboard": {"name": "MSI PRO B660M-A", "spec": "LGA1700, ATX, DDR4", "price": 2200, "akakceQuery": "B660 anakart ddr4"},
+        "ram": {"name": "G.Skill Ripjaws 16GB DDR4 3600", "spec": "16GB, 3600MHz, CL18", "price": 1500, "akakceQuery": "16gb ddr4 3600mhz ram"},
+        "gpu": {"name": "Sapphire RX 6600 8GB", "spec": "8GB GDDR6, 128-bit", "price": 7000, "akakceQuery": "rx 6600 8gb"},
+        "ssd": {"name": "WD Black SN770 1TB", "spec": "M.2 NVMe Gen4, 5150MB/s", "price": 1500, "akakceQuery": "1tb nvme gen4 ssd"},
+        "psu": {"name": "Seasonic Focus GX-650", "spec": "650W, 80+ Gold", "price": 1800, "akakceQuery": "650w 80+ gold psu"},
+        "case": {"name": "Fractal Design Pop Air", "spec": "Mid Tower ATX, Mesh", "price": 1500, "akakceQuery": "mid tower mesh kasa"}
+      },
+      "fps": {"Valorant": 220, "CS2": 200, "GTA V": 100, "Fortnite": 140}
+    },
+    "high": {
+      "name": "Üst Segment",
+      "totalPrice": 35000,
+      "parts": {
+        "cpu": {"name": "Intel Core i7-12700F", "spec": "12 Çekirdek, 2.1-4.9GHz", "price": 5500, "akakceQuery": "i7-12700f"},
+        "motherboard": {"name": "ASUS PRIME Z690-P", "spec": "LGA1700, ATX, DDR4", "price": 3500, "akakceQuery": "Z690 anakart ddr4"},
+        "ram": {"name": "Corsair Vengeance 32GB DDR4 3600", "spec": "32GB, 3600MHz, CL18", "price": 2500, "akakceQuery": "32gb ddr4 3600mhz ram"},
+        "gpu": {"name": "MSI RTX 3070 8GB", "spec": "8GB GDDR6, 256-bit", "price": 14000, "akakceQuery": "rtx 3070 8gb"},
+        "ssd": {"name": "Samsung 980 Pro 1TB", "spec": "M.2 NVMe Gen4, 7000MB/s", "price": 2500, "akakceQuery": "samsung 980 pro 1tb"},
+        "psu": {"name": "be quiet! Pure Power 11 750W", "spec": "750W, 80+ Gold", "price": 2500, "akakceQuery": "750w 80+ gold psu"},
+        "case": {"name": "NZXT H510 Flow", "spec": "Mid Tower ATX, Mesh", "price": 2500, "akakceQuery": "nzxt h510 kasa"}
+      },
+      "fps": {"Valorant": 300, "CS2": 280, "GTA V": 140, "Fortnite": 190}
+    }
+  }
+}
+
+ÖNEMLİ KURALLAR:
+1. ${state.ddr.toUpperCase()} ile uyumlu GERÇEK parçalar öner
+2. Fiyatlar Türkiye 2024 piyasasına uygun TL olsun (güncel tahmin)
+3. Kullanıcının seçtiği oyunlar için FPS değerleri ${state.resolution} çözünürlükte realistic olsun
+4. Sadece JSON döndür, açıklama ekleme
+5. fps objesinde sadece kullanıcının seçtiği şu oyunları göster: ${state.games.join(', ')}
+6. totalPrice tüm parçaların toplamı olsun`;
+}
+
+// ===== RENDER RESULTS =====
+function renderResults(data) {
+  document.getElementById('resultsSection').classList.add('show');
+
+  const segments = ['budget', 'mid', 'high'];
+  segments.forEach(seg => {
+    const sys = data.systems[seg];
+    if (!sys) return;
+
+    // Update price in tab
+    document.getElementById('price' + seg).textContent = formatPrice(sys.totalPrice);
+
+    // Render card
+    renderSystemCard(seg, sys, data.ddr);
+  });
+
+  // FPS table
+  renderFPSTable(data);
+
+  // AI comment
+  if (data.aiComment) {
+    document.getElementById('aiComment').style.display = 'block';
+    document.getElementById('aiCommentText').textContent = data.aiComment;
+  }
+
+  // Show first segment
+  showSegment('budget', document.querySelector('.seg-tab.budget'));
+
+  // Scroll to results
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+const PART_ICONS = {
+  cpu: '⚙️', motherboard: '🏠', ram: '🧠', gpu: '🎮',
+  ssd: '💾', psu: '⚡', case: '📦', cooler: '🌡️'
+};
+
+const PART_LABELS = {
+  cpu: 'İŞLEMCİ', motherboard: 'ANAKART', ram: 'RAM',
+  gpu: 'EKRAN KARTI', ssd: 'SSD', psu: 'GÜÇ KAYNAĞI',
+  case: 'KASA', cooler: 'SOĞUTUCU'
+};
+
+const SEG_COLORS = { budget: 'var(--budget)', mid: 'var(--mid)', high: 'var(--high)' };
+const DDR_COLORS = { ddr3: 'var(--ddr3)', ddr4: 'var(--ddr4)', ddr5: 'var(--ddr5)' };
+
+function renderSystemCard(seg, sys, ddr) {
+  const card = document.getElementById('card-' + seg);
+  const ddrColor = DDR_COLORS[ddr] || 'var(--accent)';
+  const segColor = SEG_COLORS[seg];
+
+  const partsHTML = Object.entries(sys.parts).map(([key, part]) => `
+    <div class="part-row">
+      <div class="part-left">
+        <div class="part-icon">${PART_ICONS[key] || '🔧'}</div>
+        <div class="part-info">
+          <div class="part-type">${PART_LABELS[key] || key.toUpperCase()}</div>
+          <div class="part-name">${part.name}</div>
+          <div class="part-spec">${part.spec}</div>
+        </div>
+      </div>
+      <div class="part-right">
+        <div class="part-price">${formatPrice(part.price)}</div>
+        <a class="part-link" href="https://www.akakce.com/arama/?q=${encodeURIComponent(part.akakceQuery)}" target="_blank">Akakce →</a>
+      </div>
+    </div>
+  `).join('');
+
+  card.innerHTML = `
+    <div class="system-card-header">
+      <div class="system-card-title" style="color:${segColor}">${sys.name}</div>
+      <span class="ddr-tag" style="background:${ddrColor}22;color:${ddrColor};border:1px solid ${ddrColor}44">${ddr.toUpperCase()}</span>
+    </div>
+    <div class="parts-list">${partsHTML}</div>
+    <div class="total-bar">
+      <div>
+        <div class="total-label">Tahmini Toplam</div>
+        <div class="total-price">${formatPrice(sys.totalPrice)}</div>
+      </div>
+      <button class="cart-btn" onclick="addSystemToCart('${seg}')">🛒 Sepete Ekle</button>
+    </div>
+  `;
+}
+
+function renderFPSTable(data) {
+  const allGames = new Set();
+  Object.values(data.systems).forEach(sys => {
+    if (sys.fps) Object.keys(sys.fps).forEach(g => allGames.add(g));
+  });
+
+  if (allGames.size === 0) {
+    document.getElementById('fpsSection').style.display = 'none';
+    return;
+  }
+
+  const maxFPS = 400;
+
+  const rows = [...allGames].map(game => {
+    const b = data.systems.budget?.fps?.[game] || '—';
+    const m = data.systems.mid?.fps?.[game] || '—';
+    const h = data.systems.high?.fps?.[game] || '—';
+
+    const bW = b !== '—' ? Math.round((b / maxFPS) * 80) : 0;
+    const mW = m !== '—' ? Math.round((m / maxFPS) * 80) : 0;
+    const hW = h !== '—' ? Math.round((h / maxFPS) * 80) : 0;
+
+    return `
+      <tr>
+        <td>${game}</td>
+        <td>
+          <div class="fps-bar-wrap">
+            <div class="fps-bar budget" style="width:${bW}px"></div>
+            <span class="fps-val budget">${b !== '—' ? b + 'fps' : '—'}</span>
+          </div>
+        </td>
+        <td>
+          <div class="fps-bar-wrap">
+            <div class="fps-bar mid" style="width:${mW}px"></div>
+            <span class="fps-val mid">${m !== '—' ? m + 'fps' : '—'}</span>
+          </div>
+        </td>
+        <td>
+          <div class="fps-bar-wrap">
+            <div class="fps-bar high" style="width:${hW}px"></div>
+            <span class="fps-val high">${h !== '—' ? h + 'fps' : '—'}</span>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  document.getElementById('fpsBody').innerHTML = rows;
+}
+
+// ===== SEGMENT TABS =====
+function showSegment(seg, el) {
+  document.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('.system-card').forEach(c => c.classList.remove('show'));
+  const card = document.getElementById('card-' + seg);
+  if (card) card.classList.add('show');
+
+  state.activeSegment = seg;
+}
+
+// ===== CART =====
+function addSystemToCart(seg) {
+  if (!state.results) return;
+  const sys = state.results.systems[seg];
+  if (!sys) return;
+
+  // Clear cart and add new system
+  state.cart = [];
+  Object.entries(sys.parts).forEach(([key, part]) => {
+    state.cart.push({
+      id: key + '_' + seg,
+      type: PART_LABELS[key] || key,
+      name: part.name,
+      price: part.price,
+      query: part.akakceQuery
+    });
+  });
+
+  saveCart();
+  renderCart();
+  openCart();
+}
+
+function removeFromCart(id) {
+  state.cart = state.cart.filter(i => i.id !== id);
+  saveCart();
+  renderCart();
+}
+
+function renderCart() {
+  const items = state.cart;
+  const total = items.reduce((s, i) => s + i.price, 0);
+
+  document.getElementById('cartItems').innerHTML = items.length === 0
+    ? '<div style="text-align:center;color:var(--text3);padding:20px;font-size:13px;">Sepet boş</div>'
+    : items.map(item => `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-type">${item.type}</div>
+            <div class="cart-item-name">${item.name}</div>
+          </div>
+          <div class="cart-item-price">${formatPrice(item.price)}</div>
+          <button class="cart-remove" onclick="removeFromCart('${item.id}')">✕</button>
+        </div>
+      `).join('');
+
+  document.getElementById('cartTotal').textContent = formatPrice(total);
+  document.getElementById('cartBadge').textContent = items.length;
+
+  const fab = document.getElementById('cartFab');
+  if (items.length > 0) fab.classList.add('show');
+  else fab.classList.remove('show');
+}
+
+function saveCart() {
+  localStorage.setItem('pcusta_cart', JSON.stringify(state.cart));
+}
+
+function openCart() {
+  document.getElementById('cartPanel').classList.add('open');
+  document.getElementById('cartBackdrop').classList.add('open');
+}
+
+function closeCart() {
+  document.getElementById('cartPanel').classList.remove('open');
+  document.getElementById('cartBackdrop').classList.remove('open');
+}
+
+function openAllLinks() {
+  state.cart.forEach(item => {
+    window.open(`https://www.akakce.com/arama/?q=${encodeURIComponent(item.query)}`, '_blank');
+  });
+}
+
+// ===== RESET =====
+function resetForm() {
+  state.ddr = null;
+  state.resolution = null;
+  state.targetFPS = null;
+  state.games = [];
+  state.results = null;
+
+  document.querySelectorAll('.ddr-btn, .res-btn, .fps-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.game-check').forEach(b => b.classList.remove('checked'));
+
+  document.getElementById('resultsSection').classList.remove('show');
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('errorBox').classList.remove('show');
+
+  checkReady();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== UTILS =====
+function formatPrice(p) {
+  return '₺' + Number(p).toLocaleString('tr-TR');
+}
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>
