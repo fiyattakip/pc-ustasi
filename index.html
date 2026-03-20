@@ -800,7 +800,10 @@ SADECE JSON döndür, başka hiçbir şey yazma:
       headers:{'x-api-key':S.apiKey,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
-    if(!res.ok)throw new Error('API hatası');
+    if(!res.ok){
+      const errData=await res.json();
+      throw new Error(errData.error?.message||'HTTP '+res.status);
+    }
     const data=await res.json();
     const text=data.content.map(c=>c.text||'').join('');
     const match=text.match(/\{[\s\S]*\}/);
@@ -808,8 +811,8 @@ SADECE JSON döndür, başka hiçbir şey yazma:
     const parsed=JSON.parse(match[0]);
     renderFPSData(parsed.fps||{});
   }catch(e){
-    console.error(e);
-    renderFPSStatic();
+    console.error('FPS hatası:',e);
+    document.getElementById('fpsBody').innerHTML=`<tr><td colspan="4" style="text-align:center;padding:16px;font-size:11px;color:var(--red)">${e.message}</td></tr>`;
   }finally{
     document.getElementById('fpsLoading').style.display='none';
   }
@@ -856,14 +859,17 @@ async function sendAI(){
       headers:{'x-api-key':S.apiKey,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,system:`Sen bir PC donanım uzmanısın. Kısa, net, Türkçe cevap ver. Maksimum 3-4 cümle.\n\n${context}`,messages:[{role:'user',content:msg}]})
     });
-    if(!res.ok)throw new Error('API hatası');
+    if(!res.ok){
+      const errData=await res.json();
+      throw new Error(errData.error?.message||'HTTP '+res.status);
+    }
     const data=await res.json();
     const reply=data.content.map(c=>c.text||'').join('');
     document.getElementById(loadId)?.remove();
     addMsg(reply,'assistant');
   }catch(e){
     document.getElementById(loadId)?.remove();
-    addMsg('Hata: API key\'ini kontrol et.','assistant');
+    addMsg('❌ Hata: '+e.message,'assistant');
   }finally{
     document.getElementById('aiSend').disabled=false;
   }
