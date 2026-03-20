@@ -1,5 +1,5 @@
 {
-  "updated_at": "20.03.2026 04:13",
+  "updated_at": "20.03.2026 06:20",
   "prices": {
     "ddr3": {
       "budget": {
@@ -59,10 +59,10 @@
           "source": "fallback"
         },
         "case": {
-          "price": 800,
-          "source": "fallback"
+          "price": 386,
+          "source": "akakce"
         },
-        "_total": 9950
+        "_total": 9536
       },
       "high": {
         "cpu": {
@@ -70,8 +70,8 @@
           "source": "fallback"
         },
         "motherboard": {
-          "price": 1500,
-          "source": "fallback"
+          "price": 500,
+          "source": "akakce"
         },
         "ram": {
           "price": 900,
@@ -93,7 +93,7 @@
           "price": 1100,
           "source": "fallback"
         },
-        "_total": 15800
+        "_total": 14800
       }
     },
     "ddr4": {
@@ -111,8 +111,8 @@
           "source": "fallback"
         },
         "gpu": {
-          "price": 4200,
-          "source": "fallback"
+          "price": 2694,
+          "source": "akakce"
         },
         "ssd": {
           "price": 750,
@@ -123,10 +123,10 @@
           "source": "fallback"
         },
         "case": {
-          "price": 700,
-          "source": "fallback"
+          "price": 386,
+          "source": "akakce"
         },
-        "_total": 11600
+        "_total": 9780
       },
       "mid": {
         "cpu": {
@@ -218,10 +218,10 @@
           "source": "fallback"
         },
         "case": {
-          "price": 900,
-          "source": "fallback"
+          "price": 386,
+          "source": "akakce"
         },
-        "_total": 21700
+        "_total": 21186
       },
       "mid": {
         "cpu": {
