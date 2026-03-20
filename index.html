@@ -579,13 +579,13 @@ function getLinks(partName){
   const q=encodeURIComponent(partName);
   if(S.mode==='new'){
     return `
-      <a class="plink akakce" href="https://www.akakce.com/arama/?q=${q}" target="_blank">Akakce</a>
-      <a class="plink epey" href="https://www.epey.com/arama/?q=${q}" target="_blank">Epey</a>`;
+      <a class="plink akakce" href="https://www.akakce.com/arama/?q=${q}&siralama=2" target="_blank">Akakce 💰</a>
+      <a class="plink epey" href="https://www.epey.com/arama/?arama=${q}&siralama=ucuz" target="_blank">Epey 💰</a>`;
   } else {
     return `
-      <a class="plink sahibinden" href="https://www.sahibinden.com/bilgisayar-toplama-sistem?query=${q}" target="_blank">Sahibinden</a>
-      <a class="plink dolap" href="https://dolap.com/arama?q=${q}" target="_blank">Dolap</a>
-      <a class="plink letgo" href="https://tr.letgo.com/tr/search?q=${q}" target="_blank">Letgo</a>`;
+      <a class="plink sahibinden" href="https://www.sahibinden.com/arama?query=${q}&category=12&pagingSize=50&sorting=price_asc" target="_blank">Sahibinden</a>
+      <a class="plink dolap" href="https://dolap.com/urunler?q=${q}&sort=price-asc" target="_blank">Dolap</a>
+      <a class="plink letgo" href="https://www.letgo.com/tr-tr/arama?search=${q}" target="_blank">Letgo</a>`; 
   }
 }
 
