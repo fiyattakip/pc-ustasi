@@ -1,136 +1,98 @@
 import requests
 import json
 import time
-import re
 import os
 from datetime import datetime
 
-# ScraperAPI key GitHub Secrets'tan gelir
-SCRAPER_KEY = os.environ.get("SCRAPER_API_KEY", "")
+# API Keys
+CLAUDE_KEY = os.environ.get("CLAUDE_API_KEY", "")
 
-def scrape(url):
-    """ScraperAPI üzerinden sayfa çek"""
-    api_url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={requests.utils.quote(url)}&country_code=tr"
-    try:
-        r = requests.get(api_url, timeout=30)
-        if r.status_code == 200:
-            return r.text
-        print(f"  ❌ HTTP {r.status_code}")
-        return None
-    except Exception as e:
-        print(f"  ❌ Hata: {e}")
-        return None
-
-def parse_price(html):
-    """HTML'den en düşük fiyatı çek"""
-    if not html:
-        return None
-    patterns = [
-        r'"price"\s*:\s*"?(\d+(?:[.,]\d+)?)"?',
-        r'(\d{3,6}(?:\.\d{3})*(?:,\d{2})?)\s*(?:TL|₺)',
-        r'(\d{3,6})\s*(?:TL|₺)',
-    ]
-    prices = []
-    for pat in patterns:
-        for m in re.finditer(pat, html):
-            try:
-                v = float(m.group(1).replace('.','').replace(',','.'))
-                if 100 < v < 150000:
-                    prices.append(v)
-            except:
-                pass
-        if len(prices) >= 3:
-            break
-    prices.sort()
-    return int(prices[0]) if prices else None
-
-# ===== PARÇA LİSTESİ =====
 PARTS = {
     "ddr3": {
         "budget": {
-            "cpu":         "intel i5-4590",
-            "motherboard": "h81 anakart lga1150",
-            "ram":         "16gb ddr3 1600mhz ram",
-            "gpu":         "rx 570 4gb ekran karti",
-            "ssd":         "kingston a400 480gb ssd",
-            "psu":         "550w 80 plus bronze psu",
-            "case":        "mid tower atx kasa"
+            "cpu":         "Intel Core i5-4590",
+            "motherboard": "H81 anakart LGA1150",
+            "ram":         "16GB DDR3 1600MHz RAM",
+            "gpu":         "RX 570 4GB ekran karti",
+            "ssd":         "Kingston A400 480GB SSD",
+            "psu":         "550W 80+ Bronze PSU",
+            "case":        "Mid Tower ATX kasa"
         },
         "mid": {
-            "cpu":         "intel i7-4770",
-            "motherboard": "b85 anakart lga1150",
-            "ram":         "16gb ddr3 ram",
-            "gpu":         "rx 580 8gb ekran karti",
-            "ssd":         "1tb sata ssd",
-            "psu":         "550w 80 plus psu",
-            "case":        "mid tower kasa"
+            "cpu":         "Intel Core i7-4770",
+            "motherboard": "B85 anakart LGA1150",
+            "ram":         "16GB DDR3 1600MHz RAM",
+            "gpu":         "RX 580 8GB ekran karti",
+            "ssd":         "1TB SATA SSD",
+            "psu":         "550W 80+ Bronze PSU",
+            "case":        "Mid Tower ATX kasa"
         },
         "high": {
-            "cpu":         "intel i7-4790k",
-            "motherboard": "z97 anakart lga1150",
-            "ram":         "16gb ddr3 2133mhz ram",
-            "gpu":         "gtx 1070 8gb ekran karti",
-            "ssd":         "samsung 870 evo 1tb",
-            "psu":         "650w 80 plus gold psu",
-            "case":        "nzxt h510 kasa"
+            "cpu":         "Intel Core i7-4790K",
+            "motherboard": "Z97 anakart LGA1150",
+            "ram":         "16GB DDR3 2133MHz RAM",
+            "gpu":         "GTX 1070 8GB ekran karti",
+            "ssd":         "Samsung 870 EVO 1TB SSD",
+            "psu":         "650W 80+ Gold PSU",
+            "case":        "NZXT H510 kasa"
         }
     },
     "ddr4": {
         "budget": {
-            "cpu":         "intel i3-12100f",
-            "motherboard": "h610m anakart ddr4",
-            "ram":         "16gb ddr4 3200mhz ram",
-            "gpu":         "rx 6500 xt ekran karti",
-            "ssd":         "500gb nvme m2 ssd",
-            "psu":         "550w 80 plus psu",
-            "case":        "mid tower kasa"
+            "cpu":         "Intel Core i3-12100F",
+            "motherboard": "H610M anakart DDR4",
+            "ram":         "16GB DDR4 3200MHz RAM",
+            "gpu":         "RX 6500 XT 4GB ekran karti",
+            "ssd":         "500GB NVMe M.2 SSD",
+            "psu":         "550W 80+ Bronze PSU",
+            "case":        "Mid Tower ATX kasa"
         },
         "mid": {
-            "cpu":         "intel i5-12400f",
-            "motherboard": "b660 anakart ddr4",
-            "ram":         "16gb ddr4 3600mhz ram",
-            "gpu":         "rx 6600 8gb ekran karti",
-            "ssd":         "1tb nvme gen4 ssd",
-            "psu":         "650w 80 plus gold psu",
-            "case":        "fractal design pop air"
+            "cpu":         "Intel Core i5-12400F",
+            "motherboard": "B660 anakart DDR4",
+            "ram":         "16GB DDR4 3600MHz RAM",
+            "gpu":         "RX 6600 8GB ekran karti",
+            "ssd":         "1TB NVMe Gen4 SSD",
+            "psu":         "650W 80+ Gold PSU",
+            "case":        "Fractal Design Pop Air kasa"
         },
         "high": {
-            "cpu":         "intel i7-12700f",
-            "motherboard": "z690 anakart ddr4",
-            "ram":         "32gb ddr4 3600mhz ram",
-            "gpu":         "rtx 3070 8gb ekran karti",
-            "ssd":         "samsung 980 pro 1tb",
-            "psu":         "750w 80 plus gold psu",
-            "case":        "nzxt h510 flow kasa"
+            "cpu":         "Intel Core i7-12700F",
+            "motherboard": "Z690 anakart DDR4",
+            "ram":         "32GB DDR4 3600MHz RAM",
+            "gpu":         "RTX 3070 8GB ekran karti",
+            "ssd":         "Samsung 980 Pro 1TB NVMe",
+            "psu":         "750W 80+ Gold PSU",
+            "case":        "NZXT H510 Flow kasa"
         }
     },
     "ddr5": {
         "budget": {
-            "cpu":         "intel i5-13400f",
-            "motherboard": "b760 anakart ddr5",
-            "ram":         "16gb ddr5 4800mhz ram",
-            "gpu":         "rx 7600 8gb ekran karti",
-            "ssd":         "1tb nvme m2 ssd",
-            "psu":         "650w 80 plus psu",
-            "case":        "mid tower kasa"
+            "cpu":         "Intel Core i5-13400F",
+            "motherboard": "B760 anakart DDR5",
+            "ram":         "16GB DDR5 4800MHz RAM",
+            "gpu":         "RX 7600 8GB ekran karti",
+            "ssd":         "1TB NVMe M.2 SSD",
+            "psu":         "650W 80+ Bronze PSU",
+            "case":        "Mid Tower ATX kasa"
         },
         "mid": {
-            "cpu":         "intel i5-13600k",
-            "motherboard": "b760 anakart ddr5 atx",
-            "ram":         "16gb ddr5 5600mhz ram",
-            "gpu":         "rtx 4060 8gb ekran karti",
-            "ssd":         "1tb nvme gen4 ssd",
-            "psu":         "750w 80 plus gold psu",
-            "case":        "lian li lancool kasa"
+            "cpu":         "Intel Core i5-13600K",
+            "motherboard": "B760 anakart DDR5 ATX",
+            "ram":         "16GB DDR5 5600MHz RAM",
+            "gpu":         "RTX 4060 8GB ekran karti",
+            "ssd":         "1TB NVMe Gen4 SSD",
+            "psu":         "750W 80+ Gold PSU",
+            "case":        "Lian Li Lancool kasa"
         },
         "high": {
-            "cpu":         "intel i7-13700k",
-            "motherboard": "z790 anakart ddr5",
-            "ram":         "32gb ddr5 6000mhz ram",
-            "gpu":         "rtx 4070 12gb ekran karti",
-            "ssd":         "samsung 990 pro 2tb",
-            "psu":         "850w 80 plus platinum psu",
-            "case":        "fractal design torrent kasa"
+            "cpu":         "Intel Core i7-13700K",
+            "motherboard": "Z790 anakart DDR5",
+            "ram":         "32GB DDR5 6000MHz RAM",
+            "gpu":         "RTX 4070 12GB ekran karti",
+            "ssd":         "Samsung 990 Pro 2TB NVMe",
+            "psu":         "850W 80+ Platinum PSU",
+            "case":        "Fractal Design Torrent kasa"
         }
     }
 }
@@ -153,27 +115,61 @@ FALLBACK = {
     }
 }
 
-def get_price(query, fallback):
-    """Akakce'den fiyat çek, olmazsa fallback"""
-    url = f"https://www.akakce.com/arama/?q={requests.utils.quote(query)}"
-    print(f"  🔍 {query}")
-    
-    html = scrape(url)
-    price = parse_price(html)
-    
-    if price:
-        print(f"  ✅ ₺{price:,}")
-        return {"price": price, "source": "akakce"}
-    
-    print(f"  ⚠️  Yedek: ₺{fallback:,}")
-    return {"price": fallback, "source": "fallback"}
+def get_price_claude(part_name, fallback):
+    """Claude API + web search ile güncel fiyat çek"""
+    prompt = f"""Türkiye'de şu an Akakce.com veya Trendyol'da "{part_name}" ürününün güncel TL fiyatı ne kadar? 
+Sadece sayısal fiyatı ver, başka hiçbir şey yazma. Örnek: 3500
+Eğer bulamazsan sadece 0 yaz."""
+
+    try:
+        response = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": CLAUDE_KEY,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json"
+            },
+            json={
+                "model": "claude-opus-4-5",
+                "max_tokens": 100,
+                "tools": [{"type": "web_search_20250305", "name": "web_search"}],
+                "messages": [{"role": "user", "content": prompt}]
+            },
+            timeout=60
+        )
+
+        if response.status_code != 200:
+            print(f"  ❌ Claude API Hata: {response.status_code}")
+            return None
+
+        data = response.json()
+
+        # Yanıttan fiyatı çek
+        text = ""
+        for block in data.get("content", []):
+            if block.get("type") == "text":
+                text += block.get("text", "")
+
+        # Sadece sayı al
+        import re
+        numbers = re.findall(r'\d+', text.replace('.', '').replace(',', ''))
+        for n in numbers:
+            v = int(n)
+            if 100 < v < 150000:
+                return v
+
+        return None
+
+    except Exception as e:
+        print(f"  ❌ Hata: {e}")
+        return None
 
 def main():
-    if not SCRAPER_KEY:
-        print("❌ SCRAPER_API_KEY bulunamadı!")
+    if not CLAUDE_KEY:
+        print("❌ CLAUDE_API_KEY bulunamadi!")
         return
 
-    print("🚀 PC Ustası Fiyat Güncelleyici")
+    print("🚀 PC Ustası Fiyat Güncelleyici (Claude AI)")
     print(f"📅 {datetime.now().strftime('%d.%m.%Y %H:%M')}\n")
 
     result = {
@@ -190,11 +186,20 @@ def main():
             result["prices"][ddr][seg] = {}
             total = 0
 
-            for part_key, query in PARTS[ddr][seg].items():
+            for part_key, part_name in PARTS[ddr][seg].items():
                 fallback = FALLBACK[ddr][seg][part_key]
-                data = get_price(query, fallback)
-                result["prices"][ddr][seg][part_key] = data
-                total += data["price"]
+                print(f"  🔍 {part_name}")
+
+                price = get_price_claude(part_name, fallback)
+
+                if price:
+                    print(f"  ✅ ₺{price:,}")
+                    result["prices"][ddr][seg][part_key] = {"price": price, "source": "claude"}
+                else:
+                    print(f"  ⚠️  Yedek: ₺{fallback:,}")
+                    result["prices"][ddr][seg][part_key] = {"price": fallback, "source": "fallback"}
+
+                total += result["prices"][ddr][seg][part_key]["price"]
                 time.sleep(2)
 
             result["prices"][ddr][seg]["_total"] = total
