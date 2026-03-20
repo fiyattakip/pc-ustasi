@@ -610,21 +610,34 @@ function renderAll(){
 const SC={budget:'var(--budget)',mid:'var(--mid)',high:'var(--high)'};
 const DC={ddr3:'var(--ddr3)',ddr4:'var(--ddr4)',ddr5:'var(--ddr5)'};
 
-function getEpeyUrl(partName){
-  // Epey URL formatı: PHP serialize + base64
-  // a:2:{s:3:"ara";s:LENGTH:"query";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";
-  const q = partName.toLowerCase();
-  const serialized = `a:2:{s:3:"ara";s:${q.length}:"${q}";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";`;
-  const encoded = btoa(serialized);
-  return `https://www.epey.com/arama/e/${encoded}/`;
+const EPEY_CATS = {
+  cpu: 'islemci',
+  motherboard: 'anakart',
+  ram: 'bellek-ram',
+  gpu: 'ekran-karti',
+  ssd: 'ssd-disk',
+  psu: 'guc-kaynagi',
+  case: 'kasa'
+};
+
+function getEpeyUrl(partName, partKey){
+  const cat = EPEY_CATS[partKey] || 'arama';
+  const q = encodeURIComponent(partName.toLowerCase());
+  if(cat === 'arama'){
+    // Genel arama için base64 format
+    const serialized = `a:2:{s:3:"ara";s:${partName.length}:"${partName.toLowerCase()}";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";`;
+    return `https://www.epey.com/arama/e/${btoa(serialized)}/`;
+  }
+  // Kategori bazlı arama
+  return `https://www.epey.com/${cat}/?ara=${q}&siralama=fiyat:ASC`;
 }
 
-function getLinks(partName){
+function getLinks(partName, partKey){
   const q=encodeURIComponent(partName);
   if(S.mode==='new'){
     return `
       <a class="plink akakce" href="https://www.akakce.com/arama/?q=${q}&siralama=1" target="_blank">Akakce 💰</a>
-      <a class="plink epey" href="${getEpeyUrl(partName)}" target="_blank">Epey 💰</a>`;
+      <a class="plink epey" href="${getEpeyUrl(partName, partKey)}" target="_blank">Epey 💰</a>`;
   } else {
     return `
       <a class="plink sahibinden" href="https://www.sahibinden.com/ikinci-el-ve-sifir-alisveris?query_text=${q}&sorting=price_asc" target="_blank">Sahibinden</a>
@@ -667,7 +680,7 @@ function renderCard(seg){
             <div class="part-spec">${p.s}</div>
           </div>
         </div>
-        <div class="part-links">${getLinks(p.n)}</div>
+        <div class="part-links">${getLinks(p.n, k)}</div>
         ${getPriceInput(seg,k)}
       </div>`).join('')}
     </div>
