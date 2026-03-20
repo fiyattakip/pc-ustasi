@@ -256,16 +256,16 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
     <div class="section-card">
       <div class="section-title"><div class="icon">🛒</div>Ürün Tipi</div>
       <div class="mode-toggle">
-        <div class="mode-btn new active" onclick="selMode('new',this)">
+        <button class="mode-btn new active" id="modeNew" type="button">
           <span class="mode-btn-icon">🆕</span>
           <span class="mode-btn-label">Sıfır Ürün</span>
           <span class="mode-btn-sub">Akakce · Epey</span>
-        </div>
-        <div class="mode-btn used" onclick="selMode('used',this)">
+        </button>
+        <button class="mode-btn used" id="modeUsed" type="button">
           <span class="mode-btn-icon">♻️</span>
           <span class="mode-btn-label">İkinci El</span>
           <span class="mode-btn-sub">Sahibinden · Dolap · Letgo</span>
-        </div>
+        </button>
       </div>
     </div>
 
@@ -273,9 +273,9 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
     <div class="section-card">
       <div class="section-title"><div class="icon">🧠</div>RAM Nesli Seç</div>
       <div class="ddr-selector">
-        <div class="ddr-btn ddr3-btn" onclick="sel('ddr','ddr3',this)"><span class="ddr-badge">DDR3</span><span class="ddr-label">Eski nesil<br>ikinci el</span><span class="ddr-price">~3K–12K ₺</span></div>
-        <div class="ddr-btn ddr4-btn" onclick="sel('ddr','ddr4',this)"><span class="ddr-badge">DDR4</span><span class="ddr-label">En yaygın<br>fiyat/perf</span><span class="ddr-price">~10K–30K ₺</span></div>
-        <div class="ddr-btn ddr5-btn" onclick="sel('ddr','ddr5',this)"><span class="ddr-badge">DDR5</span><span class="ddr-label">Yeni nesil<br>gelecek</span><span class="ddr-price">~18K–50K ₺</span></div>
+        <button class="ddr-btn ddr3-btn" type="button" data-ddr="ddr3"><span class="ddr-badge">DDR3</span><span class="ddr-label">Eski nesil<br>ikinci el</span><span class="ddr-price">~3K–12K ₺</span></button>
+        <button class="ddr-btn ddr4-btn" type="button" data-ddr="ddr4"><span class="ddr-badge">DDR4</span><span class="ddr-label">En yaygın<br>fiyat/perf</span><span class="ddr-price">~10K–30K ₺</span></button>
+        <button class="ddr-btn ddr5-btn" type="button" data-ddr="ddr5"><span class="ddr-badge">DDR5</span><span class="ddr-label">Yeni nesil<br>gelecek</span><span class="ddr-price">~18K–50K ₺</span></button>
       </div>
     </div>
 
@@ -283,9 +283,9 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
     <div class="section-card">
       <div class="section-title"><div class="icon">🖥️</div>Monitör Çözünürlüğü</div>
       <div class="res-grid">
-        <div class="res-btn" onclick="sel('res','1080p',this)"><span class="res-name">1080p</span><span class="res-desc">Full HD</span></div>
-        <div class="res-btn" onclick="sel('res','1440p',this)"><span class="res-name">1440p</span><span class="res-desc">2K / QHD</span></div>
-        <div class="res-btn" onclick="sel('res','4K',this)"><span class="res-name">4K</span><span class="res-desc">Ultra HD</span></div>
+        <button class="res-btn" type="button" data-res="1080p"><span class="res-name">1080p</span><span class="res-desc">Full HD</span></button>
+        <button class="res-btn" type="button" data-res="1440p"><span class="res-name">1440p</span><span class="res-desc">2K / QHD</span></button>
+        <button class="res-btn" type="button" data-res="4K"><span class="res-name">4K</span><span class="res-desc">Ultra HD</span></button>
       </div>
     </div>
 
@@ -293,9 +293,9 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
     <div class="section-card">
       <div class="section-title"><div class="icon">🎯</div>Hedef FPS</div>
       <div class="fps-grid">
-        <div class="fps-btn" onclick="sel('fps','60',this)"><span class="fps-num">60fps</span><span class="fps-desc">Standart</span></div>
-        <div class="fps-btn" onclick="sel('fps','144',this)"><span class="fps-num">144fps</span><span class="fps-desc">Akıcı</span></div>
-        <div class="fps-btn" onclick="sel('fps','240',this)"><span class="fps-num">240fps+</span><span class="fps-desc">Rekabetçi</span></div>
+        <button class="fps-btn" type="button" data-fps="60"><span class="fps-num">60fps</span><span class="fps-desc">Standart</span></button>
+        <button class="fps-btn" type="button" data-fps="144"><span class="fps-num">144fps</span><span class="fps-desc">Akıcı</span></button>
+        <button class="fps-btn" type="button" data-fps="240"><span class="fps-num">240fps+</span><span class="fps-desc">Rekabetçi</span></button>
       </div>
     </div>
 
@@ -497,31 +497,63 @@ let S={
 function init(){
   const cm={fps:'catFPS',rpg:'catRPG',sport:'catSport',moba:'catMOBA',sim:'catSim'};
   Object.entries(GAMES).forEach(([c,gs])=>{
-    document.getElementById(cm[c]).innerHTML=gs.map(g=>`<div class="game-check" onclick="tog('${g.replace(/'/g,"\\'")}',this)"><div class="game-checkbox">✓</div><span class="game-name">${g}</span></div>`).join('');
+    document.getElementById(cm[c]).innerHTML=gs.map(g=>`<div class="game-check" data-game="${g.replace(/"/g,'&quot;')}"><div class="game-checkbox">✓</div><span class="game-name">${g}</span></div>`).join('');
   });
+
+  // Game checkboxes
+  document.querySelectorAll('.game-check').forEach(el=>{
+    el.addEventListener('click',function(){
+      this.classList.toggle('checked');
+      const name=this.dataset.game;
+      if(this.classList.contains('checked')){if(!S.games.includes(name))S.games.push(name);}
+      else S.games=S.games.filter(g=>g!==name);
+      chk();
+    });
+  });
+
+  initEvents();
   renderCart();
   updateApiBtn();
 }
 
-// ===== SELECTORS =====
-function sel(type,v,el){
-  const cls=type==='ddr'?'.ddr-btn':type==='res'?'.res-btn':'.fps-btn';
-  document.querySelectorAll(cls).forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-  S[type]=v;chk();
-}
+// ===== EVENT LISTENERS =====
+function initEvents(){
+  // Mode toggle
+  document.getElementById('modeNew').addEventListener('click',function(){
+    document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');S.mode='new';
+  });
+  document.getElementById('modeUsed').addEventListener('click',function(){
+    document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');S.mode='used';
+  });
 
-function selMode(mode,el){
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  S.mode=mode;
-}
+  // DDR
+  document.querySelectorAll('.ddr-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.ddr-btn').forEach(b=>b.classList.remove('selected'));
+      this.classList.add('selected');
+      S.ddr=this.dataset.ddr;chk();
+    });
+  });
 
-function tog(name,el){
-  el.classList.toggle('checked');
-  if(el.classList.contains('checked')){if(!S.games.includes(name))S.games.push(name);}
-  else S.games=S.games.filter(g=>g!==name);
-  chk();
+  // Resolution
+  document.querySelectorAll('.res-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.res-btn').forEach(b=>b.classList.remove('selected'));
+      this.classList.add('selected');
+      S.res=this.dataset.res;chk();
+    });
+  });
+
+  // FPS
+  document.querySelectorAll('.fps-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.fps-btn').forEach(b=>b.classList.remove('selected'));
+      this.classList.add('selected');
+      S.fps=this.dataset.fps;chk();
+    });
+  });
 }
 
 function chk(){
@@ -827,9 +859,13 @@ function updateTot(seg){
     document.getElementById('price'+seg).textContent=total;
   }
 }
+function reset(){
   S.ddr=null;S.res=null;S.fps=null;S.games=[];S.prices={};S.currentSystem=null;
   document.querySelectorAll('.ddr-btn,.res-btn,.fps-btn').forEach(b=>b.classList.remove('selected'));
   document.querySelectorAll('.game-check').forEach(b=>b.classList.remove('checked'));
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('modeNew').classList.add('active');
+  S.mode='new';
   document.getElementById('resultsSection').classList.remove('show');
   document.getElementById('formSection').style.display='block';
   chk();window.scrollTo({top:0,behavior:'smooth'});
