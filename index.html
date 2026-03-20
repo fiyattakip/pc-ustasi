@@ -611,21 +611,16 @@ const SC={budget:'var(--budget)',mid:'var(--mid)',high:'var(--high)'};
 const DC={ddr3:'var(--ddr3)',ddr4:'var(--ddr4)',ddr5:'var(--ddr5)'};
 
 function getLinks(partName){
-  const q=encodeURIComponent(partName+' fiyat');
+  const q=encodeURIComponent(partName);
   if(S.mode==='new'){
-    const qa=encodeURIComponent('site:akakce.com '+partName);
-    const qe=encodeURIComponent('site:epey.com '+partName);
     return `
-      <a class="plink akakce" href="https://www.google.com/search?q=${qa}" target="_blank">Akakce 🔍</a>
-      <a class="plink epey" href="https://www.google.com/search?q=${qe}" target="_blank">Epey 🔍</a>`;
+      <a class="plink akakce" href="https://www.akakce.com/arama/?q=${q}&siralama=1" target="_blank">Akakce 💰</a>
+      <a class="plink epey" href="https://www.epey.com/arama/?q=${q}&siralama=fiyat:ASC" target="_blank">Epey 💰</a>`;
   } else {
-    const qs=encodeURIComponent('site:sahibinden.com '+partName);
-    const qd=encodeURIComponent('site:dolap.com '+partName);
-    const ql=encodeURIComponent('site:letgo.com '+partName);
     return `
-      <a class="plink sahibinden" href="https://www.google.com/search?q=${qs}" target="_blank">Sahibinden 🔍</a>
-      <a class="plink dolap" href="https://www.google.com/search?q=${qd}" target="_blank">Dolap 🔍</a>
-      <a class="plink letgo" href="https://www.google.com/search?q=${ql}" target="_blank">Letgo 🔍</a>`;
+      <a class="plink sahibinden" href="https://www.sahibinden.com/ikinci-el-ve-sifir-alisveris?query_text=${q}&sorting=price_asc" target="_blank">Sahibinden</a>
+      <a class="plink dolap" href="https://dolap.com/ara?q=${q}&sira=artan-fiyat" target="_blank">Dolap</a>
+      <a class="plink letgo" href="https://www.letgo.com/arama?query_text=${q}&isSearchCall=true&sorting=asc-price" target="_blank">Letgo</a>`;
   }
 }
 
