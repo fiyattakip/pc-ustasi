@@ -132,8 +132,11 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
 .plink.sahibinden:hover{background:rgba(255,195,0,0.2)}
 .plink.dolap{color:#a855f7;border-color:#a855f744;background:rgba(168,85,247,0.08)}
 .plink.dolap:hover{background:rgba(168,85,247,0.2)}
-.plink.letgo{color:#00c896;border-color:#00c89644;background:rgba(0,200,150,0.08)}
-.plink.letgo:hover{background:rgba(0,200,150,0.2)}
+.price-input-row{display:flex;align-items:center;gap:4px;margin-top:6px}
+.price-label{font-size:12px;color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:700}
+.price-input{background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:5px 8px;color:var(--text);font-size:12px;font-family:'JetBrains Mono',monospace;outline:none;width:120px;transition:border-color 0.2s}
+.price-input:focus{border-color:var(--accent)}
+.price-input::placeholder{color:var(--text3)}
 
 /* TOTAL */
 .total-bar{padding:14px 18px;background:var(--bg3);border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
@@ -576,17 +579,38 @@ const SC={budget:'var(--budget)',mid:'var(--mid)',high:'var(--high)'};
 const DC={ddr3:'var(--ddr3)',ddr4:'var(--ddr4)',ddr5:'var(--ddr5)'};
 
 function getLinks(partName){
-  const q=encodeURIComponent(partName);
+  const q=encodeURIComponent(partName+' fiyat');
   if(S.mode==='new'){
+    const qa=encodeURIComponent('site:akakce.com '+partName);
+    const qe=encodeURIComponent('site:epey.com '+partName);
     return `
-      <a class="plink akakce" href="https://www.akakce.com/arama/?q=${q}&siralama=2" target="_blank">Akakce 💰</a>
-      <a class="plink epey" href="https://www.epey.com/arama/?arama=${q}&siralama=ucuz" target="_blank">Epey 💰</a>`;
+      <a class="plink akakce" href="https://www.google.com/search?q=${qa}" target="_blank">Akakce 🔍</a>
+      <a class="plink epey" href="https://www.google.com/search?q=${qe}" target="_blank">Epey 🔍</a>`;
   } else {
+    const qs=encodeURIComponent('site:sahibinden.com '+partName);
+    const qd=encodeURIComponent('site:dolap.com '+partName);
+    const ql=encodeURIComponent('site:letgo.com '+partName);
     return `
-      <a class="plink sahibinden" href="https://www.sahibinden.com/arama?query=${q}&category=12&pagingSize=50&sorting=price_asc" target="_blank">Sahibinden</a>
-      <a class="plink dolap" href="https://dolap.com/urunler?q=${q}&sort=price-asc" target="_blank">Dolap</a>
-      <a class="plink letgo" href="https://www.letgo.com/tr-tr/arama?search=${q}" target="_blank">Letgo</a>`; 
+      <a class="plink sahibinden" href="https://www.google.com/search?q=${qs}" target="_blank">Sahibinden 🔍</a>
+      <a class="plink dolap" href="https://www.google.com/search?q=${qd}" target="_blank">Dolap 🔍</a>
+      <a class="plink letgo" href="https://www.google.com/search?q=${ql}" target="_blank">Letgo 🔍</a>`;
   }
+}
+
+function getPriceInput(seg, key){
+  const saved = S.prices[`${seg}_${key}`];
+  return `
+    <div class="price-input-row">
+      <span class="price-label">₺</span>
+      <input 
+        class="price-input" 
+        type="number" 
+        placeholder="Fiyat gir..." 
+        value="${saved||''}"
+        onchange="savePrice('${seg}','${key}',this.value)"
+        oninput="savePrice('${seg}','${key}',this.value)"
+      >
+    </div>`;
 }
 
 function renderCard(seg){
@@ -608,12 +632,13 @@ function renderCard(seg){
           </div>
         </div>
         <div class="part-links">${getLinks(p.n)}</div>
+        ${getPriceInput(seg,k)}
       </div>`).join('')}
     </div>
     <div class="total-bar">
       <div>
-        <div class="total-label">${S.mode==='used'?'♻️ İkinci El':'🆕 Sıfır'} Sistem</div>
-        <div class="total-price">Linklere tıklayarak fiyat karşılaştır</div>
+        <div class="total-label">Toplam Tutar</div>
+        <div class="total-price" id="tot_${seg}">Fiyat gir →</div>
       </div>
       <button class="cart-btn" onclick="addCart('${seg}')">🛒 Listeye Ekle</button>
     </div>`;
@@ -742,16 +767,20 @@ function addMsg(text,cls,id=''){
 // ===== CART =====
 function addCart(seg){
   const sys=DB[S.ddr][seg];
-  S.cart=Object.entries(sys.parts).map(([k,p])=>({id:`${seg}_${k}`,type:p.t,name:p.n,q:p.n,mode:S.mode}));
+  S.cart=Object.entries(sys.parts).map(([k,p])=>({
+    id:`${seg}_${k}`,type:p.t,name:p.n,q:p.n,
+    price:S.prices[`${seg}_${k}`]||0,mode:S.mode
+  }));
   localStorage.setItem('pc_cart',JSON.stringify(S.cart));
   renderCart();openCart();
 }
 function removeCart(id){S.cart=S.cart.filter(i=>i.id!==id);localStorage.setItem('pc_cart',JSON.stringify(S.cart));renderCart();}
 function renderCart(){
+  const tot=S.cart.reduce((s,i)=>s+(i.price||0),0);
   document.getElementById('cartItems').innerHTML=S.cart.length===0
     ?'<div style="text-align:center;color:var(--text3);padding:20px;font-size:12px">Liste boş</div>'
-    :S.cart.map(i=>`<div class="cart-item"><div><div class="cart-item-type">${i.type}</div><div class="cart-item-name">${i.name}</div></div><button class="cart-remove" onclick="removeCart('${i.id}')">✕</button></div>`).join('');
-  document.getElementById('cartTotal').textContent=S.cart.length+' parça';
+    :S.cart.map(i=>`<div class="cart-item"><div><div class="cart-item-type">${i.type}</div><div class="cart-item-name">${i.name}</div></div><div class="cart-item-price">${i.price?'₺'+i.price.toLocaleString('tr-TR'):'—'}</div><button class="cart-remove" onclick="removeCart('${i.id}')">✕</button></div>`).join('');
+  document.getElementById('cartTotal').textContent=tot?'₺'+tot.toLocaleString('tr-TR'):S.cart.length+' parça';
   document.getElementById('cartBadge').textContent=S.cart.length;
   document.getElementById('cartFab').classList.toggle('show',S.cart.length>0);
 }
@@ -765,7 +794,39 @@ function openLinks(){
   });
 }
 
-function reset(){
+function savePrice(seg,key,val){
+  const v=parseInt(val);
+  if(v>0){
+    S.prices[`${seg}_${key}`]=v;
+  } else {
+    delete S.prices[`${seg}_${key}`];
+  }
+  updateTot(seg);
+}
+
+function updateTot(seg){
+  const parts=DB[S.ddr][seg].parts;
+  let tot=0,cnt=0;
+  Object.keys(parts).forEach(k=>{
+    const p=S.prices[`${seg}_${k}`];
+    if(p){tot+=p;cnt++;}
+  });
+  const el=document.getElementById('tot_'+seg);
+  if(!el)return;
+  if(cnt===0){
+    el.textContent='Fiyat gir →';
+    el.style.color='var(--text2)';
+    el.style.fontSize='13px';
+    document.getElementById('price'+seg).textContent='—';
+  } else {
+    const total='₺'+tot.toLocaleString('tr-TR');
+    const label=cnt<Object.keys(parts).length?` (${cnt}/${Object.keys(parts).length} parça)`:'';
+    el.textContent=total+label;
+    el.style.color='var(--green)';
+    el.style.fontSize='20px';
+    document.getElementById('price'+seg).textContent=total;
+  }
+}
   S.ddr=null;S.res=null;S.fps=null;S.games=[];S.prices={};S.currentSystem=null;
   document.querySelectorAll('.ddr-btn,.res-btn,.fps-btn').forEach(b=>b.classList.remove('selected'));
   document.querySelectorAll('.game-check').forEach(b=>b.classList.remove('checked'));
