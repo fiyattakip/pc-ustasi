@@ -611,25 +611,93 @@ const SC={budget:'var(--budget)',mid:'var(--mid)',high:'var(--high)'};
 const DC={ddr3:'var(--ddr3)',ddr4:'var(--ddr4)',ddr5:'var(--ddr5)'};
 
 const EPEY_CATS = {
-  cpu: 'islemci',
+  cpu:         'islemci',
   motherboard: 'anakart',
-  ram: 'bellek-ram',
-  gpu: 'ekran-karti',
-  ssd: 'ssd-disk',
-  psu: 'guc-kaynagi',
-  case: 'kasa'
+  ram:         'bellek-ram',
+  gpu:         'ekran-karti',
+  ssd:         'ssd-disk',
+  psu:         'guc-kaynagi',
+  case:        'kasa'
+};
+
+// Epey arama query kısaltmaları — tam model adı yerine kısa anahtar kelime
+const EPEY_QUERIES = {
+  // DDR3
+  'Intel Core i5-4590':        'i5-4590',
+  'MSI H81M-P33':              'h81m',
+  '16GB DDR3 1600MHz':         '16gb ddr3',
+  'Sapphire RX 570 4GB':       'rx 570',
+  'Kingston A400 480GB':       'a400 480gb',
+  'Corsair CV550 550W':        'cv550',
+  'DeepCool Matrexx 30':       'matrexx',
+  'Intel Core i7-4770':        'i7-4770',
+  'Gigabyte B85M-D3H':         'b85m',
+  'MSI RX 580 8GB':            'rx 580',
+  'WD Green 1TB':              'wd green 1tb',
+  'Seasonic S12III 550W':      's12iii 550',
+  'Aerocool Cylon':            'cylon',
+  'Intel Core i7-4790K':       'i7-4790k',
+  'ASUS Z97-A':                'z97-a',
+  '16GB DDR3 2133MHz':         '16gb ddr3 2133',
+  'ZOTAC GTX 1070 8GB':        'gtx 1070',
+  'Samsung 870 EVO 1TB':       '870 evo 1tb',
+  'Seasonic Focus GX 650W':    'focus gx 650',
+  'NZXT H510':                 'h510',
+  // DDR4
+  'Intel Core i3-12100F':      'i3-12100f',
+  'Gigabyte H610M S2H':        'h610m',
+  '16GB DDR4 3200MHz':         '16gb ddr4 3200',
+  'Sapphire RX 6500 XT 4GB':   'rx 6500 xt',
+  'Kingston NV2 500GB':        'nv2 500gb',
+  'DeepCool CC360':            'cc360',
+  'Intel Core i5-12400F':      'i5-12400f',
+  'MSI PRO B660M-A':           'b660m',
+  '16GB DDR4 3600MHz':         '16gb ddr4 3600',
+  'Sapphire RX 6600 8GB':      'rx 6600',
+  'WD Black SN770 1TB':        'sn770 1tb',
+  'Fractal Design Pop Air':    'pop air',
+  'Intel Core i7-12700F':      'i7-12700f',
+  'ASUS PRIME Z690-P':         'z690-p',
+  '32GB DDR4 3600MHz':         '32gb ddr4 3600',
+  'MSI RTX 3070 8GB':          'rtx 3070',
+  'Samsung 980 Pro 1TB':       '980 pro 1tb',
+  'Corsair RM750x 750W':       'rm750x',
+  'NZXT H510 Flow':            'h510 flow',
+  // DDR5
+  'Intel Core i5-13400F':      'i5-13400f',
+  'MSI PRO B760M-A DDR5':      'b760m ddr5',
+  '16GB DDR5 4800MHz':         '16gb ddr5 4800',
+  'Sapphire RX 7600 8GB':      'rx 7600',
+  'Kingston NV2 1TB':          'nv2 1tb',
+  'Seasonic S12III 650W':      's12iii 650',
+  'DeepCool CC560':            'cc560',
+  'Intel Core i5-13600K':      'i5-13600k',
+  'ASUS PRIME B760-PLUS DDR5': 'b760 ddr5',
+  '16GB DDR5 5600MHz':         '16gb ddr5 5600',
+  'MSI RTX 4060 8GB':          'rtx 4060',
+  'WD Black SN850X 1TB':       'sn850x 1tb',
+  'Corsair RM750e 750W':       'rm750e',
+  'Lian Li Lancool 216':       'lancool 216',
+  'Intel Core i7-13700K':      'i7-13700k',
+  'ASUS ROG STRIX Z790-H':     'z790-h',
+  '32GB DDR5 6000MHz':         '32gb ddr5 6000',
+  'ASUS RTX 4070 12GB':        'rtx 4070',
+  'Samsung 990 Pro 2TB':       '990 pro 2tb',
+  'Corsair HX850 850W':        'hx850',
+  'Fractal Design Torrent':    'torrent'
 };
 
 function getEpeyUrl(partName, partKey){
-  const cat = EPEY_CATS[partKey] || 'arama';
-  const q = encodeURIComponent(partName.toLowerCase());
-  if(cat === 'arama'){
-    // Genel arama için base64 format
-    const serialized = `a:2:{s:3:"ara";s:${partName.length}:"${partName.toLowerCase()}";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";`;
-    return `https://www.epey.com/arama/e/${btoa(serialized)}/`;
+  const cat = EPEY_CATS[partKey] || null;
+  const shortQ = EPEY_QUERIES[partName] || partName.toLowerCase();
+  const q = encodeURIComponent(shortQ);
+  
+  if(cat){
+    return `https://www.epey.com/${cat}/?ara=${q}&siralama=fiyat:ASC`;
   }
-  // Kategori bazlı arama
-  return `https://www.epey.com/${cat}/?ara=${q}&siralama=fiyat:ASC`;
+  // Fallback: genel arama base64
+  const serialized = `a:2:{s:3:"ara";s:${shortQ.length}:"${shortQ}";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";`;
+  return `https://www.epey.com/arama/e/${btoa(serialized)}/`;
 }
 
 function getLinks(partName, partKey){
