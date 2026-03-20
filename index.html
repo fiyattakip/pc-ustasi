@@ -66,14 +66,14 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
 
 /* SECOND HAND TOGGLE */
 .mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.mode-btn{padding:10px;border-radius:10px;border:2px solid var(--border2);background:var(--bg3);cursor:pointer;text-align:center;transition:all 0.2s}
-.mode-btn.selected.new{border-color:var(--accent);background:rgba(0,212,255,0.08)}
-.mode-btn.selected.used{border-color:var(--yellow);background:rgba(255,214,10,0.08)}
-.mode-btn-icon{font-size:18px;display:block;margin-bottom:3px}
-.mode-btn-label{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700}
-.mode-btn.selected.new .mode-btn-label{color:var(--accent)}
-.mode-btn.selected.used .mode-btn-label{color:var(--yellow)}
-.mode-btn-sub{font-size:10px;color:var(--text3)}
+.mode-btn{padding:10px;border-radius:10px;border:2px solid var(--border2);background:var(--bg3);cursor:pointer;text-align:center;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.mode-btn.new.active{border-color:var(--accent);background:rgba(0,212,255,0.08)}
+.mode-btn.used.active{border-color:var(--yellow);background:rgba(255,214,10,0.08)}
+.mode-btn-icon{font-size:18px;display:block;margin-bottom:3px;pointer-events:none}
+.mode-btn-label{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;pointer-events:none}
+.mode-btn.new.active .mode-btn-label{color:var(--accent)}
+.mode-btn.used.active .mode-btn-label{color:var(--yellow)}
+.mode-btn-sub{font-size:10px;color:var(--text3);pointer-events:none}
 
 /* BUILD BTN */
 .build-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent2),var(--accent));border:none;border-radius:14px;color:white;font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.2s;margin-top:8px}
@@ -256,7 +256,7 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 16px
     <div class="section-card">
       <div class="section-title"><div class="icon">🛒</div>Ürün Tipi</div>
       <div class="mode-toggle">
-        <div class="mode-btn new selected" onclick="selMode('new',this)">
+        <div class="mode-btn new active" onclick="selMode('new',this)">
           <span class="mode-btn-icon">🆕</span>
           <span class="mode-btn-label">Sıfır Ürün</span>
           <span class="mode-btn-sub">Akakce · Epey</span>
@@ -512,8 +512,8 @@ function sel(type,v,el){
 }
 
 function selMode(mode,el){
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
   S.mode=mode;
 }
 
