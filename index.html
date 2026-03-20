@@ -610,12 +610,21 @@ function renderAll(){
 const SC={budget:'var(--budget)',mid:'var(--mid)',high:'var(--high)'};
 const DC={ddr3:'var(--ddr3)',ddr4:'var(--ddr4)',ddr5:'var(--ddr5)'};
 
+function getEpeyUrl(partName){
+  // Epey URL formatı: PHP serialize + base64
+  // a:2:{s:3:"ara";s:LENGTH:"query";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";
+  const q = partName.toLowerCase();
+  const serialized = `a:2:{s:3:"ara";s:${q.length}:"${q}";s:7:"arasira";i:1;}_s:9:"fiyat:ASC";`;
+  const encoded = btoa(serialized);
+  return `https://www.epey.com/arama/e/${encoded}/`;
+}
+
 function getLinks(partName){
   const q=encodeURIComponent(partName);
   if(S.mode==='new'){
     return `
       <a class="plink akakce" href="https://www.akakce.com/arama/?q=${q}&siralama=1" target="_blank">Akakce 💰</a>
-      <a class="plink epey" href="https://www.epey.com/arama/?q=${q}&siralama=fiyat:ASC" target="_blank">Epey 💰</a>`;
+      <a class="plink epey" href="${getEpeyUrl(partName)}" target="_blank">Epey 💰</a>`;
   } else {
     return `
       <a class="plink sahibinden" href="https://www.sahibinden.com/ikinci-el-ve-sifir-alisveris?query_text=${q}&sorting=price_asc" target="_blank">Sahibinden</a>
